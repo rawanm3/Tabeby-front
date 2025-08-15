@@ -1,0 +1,225 @@
+.confirm-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Tajawal', sans-serif;
+  direction: rtl;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+  
+  h1 {
+    color: #2c3e50;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    color: #7f8c8d;
+    font-size: 16px;
+  }
+}
+
+.booking-steps {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 30px;
+    position: relative;
+    
+    &:not(:last-child):after {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: -15px;
+      width: 30px;
+      height: 2px;
+      background: #bdc3c7;
+    }
+    
+    &.active {
+      .step-number {
+        background: #3498db;
+        color: white;
+      }
+      
+      .step-title {
+        color: #3498db;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  .step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #ecf0f1;
+    color: #7f8c8d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  
+  .step-title {
+    color: #95a5a6;
+    font-size: 14px;
+  }
+}
+
+.booking-summary {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  margin-bottom: 30px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  h3 {
+    color: #2c3e50;
+    font-size: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+  }
+}
+
+.doctor-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  
+  img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  h4 {
+    color: #2c3e50;
+    margin-bottom: 5px;
+  }
+  
+  p {
+    color: #7f8c8d;
+    font-size: 14px;
+    margin-bottom: 5px;
+    
+    i {
+      color: #3498db;
+      margin-left: 5px;
+    }
+  }
+}
+
+.appointment-details {
+  p {
+    display: flex;
+    justify-content: space-between;
+    max-width: 400px;
+    margin-bottom: 10px;
+    
+    strong {
+      color: #2c3e50;
+    }
+  }
+}
+
+.patient-form {
+  .form-group {
+    margin-bottom: 20px;
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+    
+    input[type="text"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 14px;
+      
+      &:focus {
+        border-color: #3498db;
+        outline: none;
+      }
+    }
+    
+    input[type="checkbox"] {
+      margin-left: 8px;
+    }
+    
+    a {
+      color: #3498db;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  
+  .btn {
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 16px;
+    
+    &.btn-primary {
+      background: #3498db;
+      color: white;
+      border: none;
+      
+      &:hover:not(:disabled) {
+        background: #2980b9;
+      }
+      
+      &:disabled {
+        background: #bdc3c7;
+        cursor: not-allowed;
+      }
+    }
+    
+    &.btn-outline {
+      background: white;
+      color: #3498db;
+      border: 1px solid #3498db;
+      
+      &:hover {
+        background: #f8f9fa;
+      }
+    }
+  }
+}
