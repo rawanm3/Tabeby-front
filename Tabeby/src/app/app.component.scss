@@ -1,0 +1,124 @@
+body{
+    margin: 0;
+}
+.theme-settings {
+  position: fixed;
+  top: 50%;
+  right: -220px;
+  transform: translateY(-50%);
+  width: 200px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px 0 0 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  transition: right 0.3s ease-in-out;
+  z-index: 999;
+
+  &.open {
+    right: 0;
+      .settings-btn {
+position: absolute;
+    left: 0px;
+    top: 12%;
+    transform: translateY(-50%);
+    background: #ffffff;
+    color: #736e6e;
+    border: none;
+    padding: 4px;
+    border-radius: 28%;
+    cursor: pointer;
+    box-shadow: none;
+  }
+  }
+
+  .theme-header {
+    margin-bottom: 15px;
+    h5 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .toggle-switch {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    input {
+      display: none;
+    }
+
+    .slider {
+      width: 40px;
+      height: 20px;
+      background: #ddd;
+      border-radius: 20px;
+      margin-right: 10px;
+      position: relative;
+      transition: 0.3s;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 16px;
+        height: 16px;
+        background: #fff;
+        border-radius: 50%;
+        transition: 0.3s;
+      }
+    }
+
+    input:checked + .slider {
+      background: #4caf50;
+    }
+
+    input:checked + .slider::after {
+      transform: translateX(20px);
+    }
+
+    .label-text {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+
+  .settings-btn {
+    position: absolute;
+    left: -42px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #4753BF;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  }
+}
+
+/* Dark Mode Example */
+body.dark-mode {
+  background: #121212;
+  color: #f1f1f1;
+}
+// position: absolute;
+//     left: 0px;
+//     top: 12%;
+//     transform: translateY(-50%);
+//     background: #ffffff;
+//     color: #736e6e;
+//     border: none;
+//     padding: 4px;
+//     border-radius: 28%;
+//     cursor: pointer;
+// }
