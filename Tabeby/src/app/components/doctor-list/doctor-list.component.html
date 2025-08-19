@@ -1,0 +1,15 @@
+<div class="doctor-list-container">
+  <div style="display: flex; align-items: center; justify-content: space-between;">
+    <div class="doctor-list-header">
+      <mat-icon>groups</mat-icon>
+      <span>Available Doctors</span>
+      <span class="doctor-list-count">({{doctors.length || 0}})</span>
+    </div>
+  </div>
+  <div class="doctors-list">
+    <div *ngIf="doctors?.length === 0" class="no-doctors">No doctors found for the selected filters.</div>
+    <div *ngFor="let doctor of sortedDoctors" class="doctor-card-wrapper">
+      <app-doctor-card [doctor]="doctor"></app-doctor-card>
+    </div>
+  </div>
+</div>

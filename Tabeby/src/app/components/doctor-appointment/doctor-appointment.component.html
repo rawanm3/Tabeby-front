@@ -1,0 +1,86 @@
+<div class="main-container">
+  <app-sidebar (filterChange)="onFilterChange($event)"></app-sidebar>
+  <div class="doctor-appointment-container">
+  <div class="specialties-header">
+    <h2>All Specialties <span class="doctor-count">{{sortedDoctors.length}} Doctors</span></h2>
+    <div class="sorting-container">
+      <span>Sorting:</span>
+      <div class="dropdown">
+        <button class="dropdown-toggle">{{selectedSorting}} <i class="arrow-down"></i></button>
+        <div class="dropdown-menu">
+          <div class="dropdown-item" (click)="changeSorting('Best Match')">Best Match</div>
+          <div class="dropdown-item" (click)="changeSorting('Top Rated')">Top Rated</div>
+          <div class="dropdown-item" (click)="changeSorting('Lowest Price')">Lowest Price</div>
+          <div class="dropdown-item" (click)="changeSorting('Highest Price')">Highest Price</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doctor-card" *ngFor="let doctor of sortedDoctors">
+    <div class="doctor-info">
+      <div class="doctor-image">
+        <img [src]="doctor.image || 'assets/default-doctor.png'" alt="{{doctor.name}}">
+      </div>
+      <div class="doctor-details">
+        <h3>Doctor <span class="doctor-name">{{doctor.name}}</span></h3>
+        <p class="doctor-title">{{doctor.title}} of {{doctor.specialty}}</p>
+        
+        <div class="rating">
+          <span *ngFor="let star of [1,2,3,4,5]">
+            <i class="star" [ngClass]="{'filled': star <= doctor.rating, 'half-filled': star - 0.5 === doctor.rating}"></i>
+          </span>
+          <span class="rating-count">Overall Rating From {{doctor.ratingCount}} Visitors</span>
+        </div>
+        
+        <div class="specialty-info">
+          <i class="icon doctor-icon"></i>
+          <span class="specialty-label">{{doctor.specialty}}</span>
+          <span *ngIf="doctor.specialtyDetails"> Specialized in {{doctor.specialtyDetails}}</span>
+        </div>
+        
+        <div class="location-info">
+          <i class="icon location-icon"></i>
+          <span>{{doctor.location}}</span>
+        </div>
+        
+        <div class="fee-info">
+          <i class="icon fee-icon"></i>
+          <span>Fees : {{doctor.price}} EGP</span>
+        </div>
+        
+        <div class="waiting-info">
+          <i class="icon time-icon"></i>
+          <span>Waiting Time : {{doctor.waitingTime}} Minutes</span>
+        </div>
+        
+        <div class="call-info">
+          <i class="icon call-icon"></i>
+          <span>{{doctor.callCost}} - Cost of regular call</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="appointment-slots">
+      <div class="slot-days-container">
+        <div class="slot-day" *ngFor="let slot of doctor.slots">
+          <div class="day-header">{{slot.label}}</div>
+          <div class="slot-times" *ngIf="slot.times && slot.times.length > 0">
+            <div *ngIf="hasAvailableSlots(slot.times); else noAvailable">
+              <div *ngFor="let time of slot.times | slice:0:6">
+                <div class="time-slot" *ngIf="time.available">{{time.time}}</div>
+              </div>
+              <div class="more-times" *ngIf="getAvailableSlotCount(slot.times) > 6">More</div>
+            </div>
+            <ng-template #noAvailable>
+              <div class="no-slots">No Available Appointments</div>
+            </ng-template>
+          </div>
+          <button class="book-button" [disabled]="!hasAvailableSlots(slot.times)" (click)="bookAppointment(doctor, slot)">BOOK</button>
+        </div>
+      </div>
+      <div class="reservation-note">Appointment reservation</div>
+    </div>
+  </div>
+  </div>
+</div>
