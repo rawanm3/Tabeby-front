@@ -1,0 +1,129 @@
+<div class="booking-container">
+  <div class="header">
+    <h1>حجز موعد طبي</h1>
+    <p>اختر الطبيب والموعد المناسب لك</p>
+  </div>
+
+  <div class="booking-steps">
+    <div class="step active">
+      <span class="step-number">1</span>
+      <span class="step-title">اختر الطبيب</span>
+    </div>
+    <div class="step">
+      <span class="step-number">2</span>
+      <span class="step-title">اختر الموعد</span>
+    </div>
+    <div class="step">
+      <span class="step-number">3</span>
+      <span class="step-title">تأكيد الحجز</span>
+    </div>
+  </div>
+
+  <div class="search-filter">
+    <div class="search-box">
+      <input type="text" placeholder="ابحث عن طبيب أو تخصص...">
+      <button class="search-btn">
+        <i class="icon-search"></i>
+      </button>
+    </div>
+
+    <div class="filter-options">
+      <select class="filter-select">
+        <option value="">جميع التخصصات</option>
+        <option value="dermatology">جلدية</option>
+        <option value="dentistry">اسنان</option>
+        <option value="psychiatry">نفسي</option>
+        <option value="pediatrics">اطفال وحديثي الولادة</option>
+        <option value="neurology">مخ واعصاب</option>
+        <option value="orthopedics">عظام</option>
+        <option value="gynecology">نساء وتوليد</option>
+        <option value="ent">انف واذن وحنجرة</option>
+        <option value="cardiology">قلب واوعية دموية</option>
+        <option value="interventional-radiology">الآشعة التداخلية</option>
+        <option value="hematology">امراض دم</option>
+        <option value="oncology">اورام</option>
+        <option value="internal-medicine">باطنة</option>
+        <option value="nutrition">تخسيس وتغذية</option>
+        <option value="pediatric-surgery">جراحة اطفال</option>
+        <option value="cancer-surgery">جراحة اورام</option>
+        <option value="vascular-surgery">جراحة اوعية دموية</option>
+        <option value="plastic-surgery">جراحة تجميل</option>
+      </select>
+
+      <select class="filter-select">
+        <option value="">جميع المواقع</option>
+        <option value="cairo">القاهرة</option>
+        <option value="giza">الجيزة</option>
+        <option value="alexandria">الإسكندرية</option>
+        <option value="dakahlia">الدقهلية</option>
+        <option value="red-sea">البحر الأحمر</option>
+        <option value="beheira">البحيرة</option>
+        <option value="fayoum">الفيوم</option>
+        <option value="gharbiya">الغربية</option>
+        <option value="ismailia">الإسماعيلية</option>
+        <option value="menofia">المنوفية</option>
+        <option value="minya">المنيا</option>
+        <option value="qalyubia">القليوبية</option>
+        <option value="new-valley">الوادي الجديد</option>
+        <option value="suez">السويس</option>
+        <option value="assiut">أسيوط</option>
+        <option value="sohag">سوهاج</option>
+        <option value="qena">قنا</option>
+        <option value="luxor">الأقصر</option>
+        <option value="aswan">أسوان</option>
+        <option value="damietta">دمياط</option>
+        <option value="port-said">بورسعيد</option>
+        <option value="sharqia">الشرقية</option>
+        <option value="south-sinai">جنوب سيناء</option>
+        <option value="kafr-el-sheikh">كفر الشيخ</option>
+        <option value="matrouh">مطروح</option>
+        <option value="north-sinai">شمال سيناء</option>
+        <option value="bani-suef">بني سويف</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="doctors-list">
+    <div class="doctor-card" *ngFor="let doctor of doctors">
+      <div class="doctor-image">
+        <img [src]="doctor.image" alt="صورة الطبيب">
+      </div>
+      <div class="doctor-info">
+        <h3 class="doctor-name">د. {{doctor.name}}</h3>
+        <p class="doctor-specialty">{{doctor.specialty}}</p>
+        <div class="doctor-rating">
+          <span class="rating-stars">
+            <i class="icon-star" *ngFor="let star of [1,2,3,4,5]" [class.filled]="star <= doctor.rating"></i>
+          </span>
+          <span class="rating-value">({{doctor.rating}}/5)</span>
+        </div>
+        <p class="doctor-location">
+          <i class="icon-location"></i> {{doctor.location}}
+        </p>
+        <p class="doctor-fees">
+          <i class="icon-money"></i> رسوم الكشف: {{doctor.fees}} جنيه
+        </p>
+      </div>
+      <div class="doctor-actions">
+        <button class="btn btn-primary" (click)="selectDoctor(doctor)">
+          اختر الموعد
+        </button>
+        <button class="btn btn-outline">
+          <i class="icon-profile"></i> الملف الشخصي
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <button class="page-btn" disabled>
+      <i class="icon-arrow-right"></i>
+    </button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <button class="page-btn">
+      <i class="icon-arrow-left"></i>
+    </button>
+  </div>
+</div>

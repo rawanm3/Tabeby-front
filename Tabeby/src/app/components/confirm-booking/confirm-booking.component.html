@@ -1,0 +1,78 @@
+<div class="confirm-container">
+  <div class="header">
+    <h1>تأكيد الحجز</h1>
+    <p>الرجاء مراجعة معلومات الحجز قبل التأكيد النهائي</p>
+  </div>
+
+  <div class="booking-steps">
+    <div class="step">
+      <span class="step-number">1</span>
+      <span class="step-title">اختر الطبيب</span>
+    </div>
+    <div class="step">
+      <span class="step-number">2</span>
+      <span class="step-title">اختر الموعد</span>
+    </div>
+    <div class="step active">
+      <span class="step-number">3</span>
+      <span class="step-title">تأكيد الحجز</span>
+    </div>
+  </div>
+
+  <div class="booking-summary">
+    <div class="summary-card">
+      <h3>معلومات الطبيب</h3>
+      <div class="doctor-info">
+        <img [src]="booking.doctor.image" alt="صورة الطبيب">
+        <div class="info">
+          <h4>د. {{booking.doctor.name}}</h4>
+          <p>{{booking.doctor.specialty}}</p>
+          <p><i class="icon-location"></i> {{booking.doctor.location}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <h3>تفاصيل الموعد</h3>
+      <div class="appointment-details">
+        <p><strong>التاريخ:</strong> {{booking.slot.dateTime | date:'EEEE, dd MMMM yyyy'}}</p>
+        <p><strong>الوقت:</strong> {{booking.slot.time}}</p>
+        <p><strong>مدة الكشف:</strong> 30 دقيقة</p>
+        <p><strong>رسوم الكشف:</strong> {{booking.doctor.fees}} جنيه</p>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <h3>معلومات المريض</h3>
+      <form [formGroup]="patientForm" class="patient-form">
+        <div class="form-group">
+          <label for="name">الاسم الكامل</label>
+          <input type="text" id="name" formControlName="name" placeholder="الاسم كما في الهوية">
+        </div>
+        
+        <div class="form-group">
+          <label for="mobile">رقم الموبايل</label>
+          <input type="tel" id="mobile" formControlName="mobile" placeholder="01XXXXXXXXX">
+        </div>
+        
+        <div class="form-group">
+          <label for="id">رقم الهوية</label>
+          <input type="text" id="id" formControlName="id" placeholder="XXXXXXXX">
+        </div>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox" formControlName="terms"> أوافق على <a href="#">الشروط والأحكام</a>
+          </label>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-outline" (click)="goBack()">رجوع</button>
+    <button class="btn btn-primary" (click)="submitBooking()" [disabled]="!patientForm.valid">
+      تأكيد الحجز
+    </button>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<div class="slot-container">
+  <div class="header">
+    <h1>اختر موعدك</h1>
+    <p>الطبيب: د. {{doctor.name}} - {{doctor.specialty}}</p>
+  </div>
+
+  <div class="booking-steps">
+    <div class="step">
+      <span class="step-number">1</span>
+      <span class="step-title">اختر الطبيب</span>
+    </div>
+    <div class="step active">
+      <span class="step-number">2</span>
+      <span class="step-title">اختر الموعد</span>
+    </div>
+    <div class="step">
+      <span class="step-number">3</span>
+      <span class="step-title">تأكيد الحجز</span>
+    </div>
+  </div>
+
+  <div class="calendar-section">
+    <div class="calendar-header">
+      <button class="nav-btn" (click)="previousWeek()">
+        <i class="icon-arrow-right"></i> الأسبوع السابق
+      </button>
+      <h3>{{currentWeekStart | date:'dd MMM yyyy'}} - {{currentWeekEnd | date:'dd MMM yyyy'}}</h3>
+      <button class="nav-btn" (click)="nextWeek()">
+        الأسبوع التالي <i class="icon-arrow-left"></i>
+      </button>
+    </div>
+
+    <div class="days-grid">
+      <div class="day-column" *ngFor="let day of weekDays">
+        <div class="day-header">
+          <div class="day-name">{{day.date | date:'EEEE'}}</div>
+          <div class="day-date">{{day.date | date:'dd/MM'}}</div>
+        </div>
+        <div class="time-slots">
+          <button *ngFor="let slot of day.slots" 
+                  class="time-slot" 
+                  [class.selected]="slot === selectedSlot"
+                  [class.booked]="slot.booked"
+                  (click)="selectSlot(slot)"
+                  [disabled]="slot.booked">
+            {{slot.time}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-outline" (click)="goBack()">رجوع</button>
+    <button class="btn btn-primary" (click)="confirmSelection()" [disabled]="!selectedSlot">
+      تأكيد الموعد
+    </button>
+  </div>
+</div>
