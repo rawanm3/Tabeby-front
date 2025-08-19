@@ -125,49 +125,54 @@
   </section>
 
   <!-- search section -->
-  <section class="search-section mb-5">
+    
+   <section class="search-section mb-5">
     <div class="search-card">
-    <div class="search-tabs">
-        <a class="tab active" data-tab="doctors">Doctors</a>
-        <a class="tab" data-tab="clinics">Clinics</a>
-        <a class="tab" data-tab="hospitals">Hospitals</a>
-    </div>
+        <div class="search-tabs">
+            <a class="tab active"
+            [class.active]="activeTab === 'doctors'" 
+            (click)="loadSpecialties('doctors')" 
+            data-tab="doctors">Doctors</a>
+            <a class="tab " data-tab="doctors"
+            [class.active]="activeTab === 'nurses'" 
+            (click)="loadSpecialties('nurses')">Nurses</a>
+        </div>
                     
-    <div class="search-form">
-        <div class="search-row">
-            <div class="search-field">
-                <i class="fas fa-stethoscope"></i>
-                <select id="specialty">
-                    <option value="">Select Specialty</option>
-                    <option value="cardiology">Cardiology</option>
-                    <option value="dermatology">Dermatology</option>
-                    <option value="neurology">Neurology</option>
-                    <option value="pediatrics">Pediatrics</option>
-                    <option value="orthopedics">Orthopedics</option>
-                </select>
-            </div>
+        <div class="search-form">
+            <div class="search-row">
+                <div class="search-field">
+                    <i class="fas fa-stethoscope"></i>
+                    <select id="specialty">
+                        <option *ngFor="let spec of specialties" [value]="spec">{{ spec }}</option>
+                        <!-- <option value="">Select Specialty</option>
+                        <option value="cardiology">Cardiology</option>
+                        <option value="dermatology">Dermatology</option>
+                        <option value="neurology">Neurology</option>
+                        <option value="pediatrics">Pediatrics</option>
+                        <option value="orthopedics">Orthopedics</option> -->
+                    </select>
+                </div>
                             
-            <div class="search-field">
-                <i class="fas fa-map-marker-alt"></i>
-                <input type="text" placeholder="Location" id="location">
-            </div>
+                <div class="search-field">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" placeholder="Location" id="location">
+                </div>
                             
-            <div class="search-field">
-                <i class="fas fa-calendar"></i>
-                <input type="date" id="date">
-            </div>
+                <div class="search-field">
+                    <i class="fas fa-user-md"></i>
+                    <input type="text" placeholder="Doctor's Name" id="doctor-name">
+                </div>
                             
-            <button class="search-btn">
-                <i class="fas fa-search"></i>
-                Search
-            </button>
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+            </div>
         </div>
     </div>
-</div>
+   </section>
 
-  </section>
-   
-        <!-- Specialists Section -->
+    <!-- Specialists Section -->
     <section class="specialists-section">
         <div class="container">
             <div class="section-header">
