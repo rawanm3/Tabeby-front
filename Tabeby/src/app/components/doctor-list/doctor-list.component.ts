@@ -4,10 +4,11 @@ import { Component, Input } from '@angular/core';
   selector: 'app-doctor-list',
   templateUrl: './doctor-list.component.html',
   styleUrls: ['./doctor-list.component.scss']
+  
 })
 export class DoctorListComponent {
   @Input() doctors: any[] = [];
-  sortType: string = 'best';
+  sortType: string = 'best';//@Input() doctors: بيستقبل قائمة الدكاترة من الكومبوننت الأب (parent).
 
   get sortedDoctors() {
     let docs = [...this.doctors];
@@ -20,7 +21,7 @@ export class DoctorListComponent {
         return docs.sort((a, b) => (b.price || 0) - (a.price || 0));
       case 'wait':
         return docs.sort((a, b) => {
-          // محاولة استخراج الدقائق من waitingTime
+
           const getMinutes = (w: any) => {
             if (!w) return 0;
             if (typeof w === 'number') return w;

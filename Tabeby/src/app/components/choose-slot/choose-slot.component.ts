@@ -22,8 +22,8 @@ export class ChooseSlotComponent implements OnInit {
   doctor!: Doctor;
   currentWeekStart: Date = new Date();
   currentWeekEnd: Date = new Date();
-  weekDays: DaySlots[] = []; // <-- تحديد النوع هنا
-  selectedSlot: TimeSlot | null = null; // <-- تحديد النوع هنا
+  weekDays: DaySlots[] = [];
+  selectedSlot: TimeSlot | null = null; 
 
   constructor(
     private route: ActivatedRoute,

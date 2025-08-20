@@ -41,14 +41,14 @@ import { SortingDropdownComponent } from './components/sorting-dropdown/sorting-
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    BrowserAnimationsModule,
-    MatSidenavModule,
-    MatExpansionModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatButtonModule,
-    MatRadioModule,
-    MatMenuModule
+    BrowserAnimationsModule,//لعمل تأثيرات  الرسوم المتحركه 
+    MatSidenavModule,//بيستخدم لعمل سيدبار (Side Navigation) يفتح ويقفل
+    MatExpansionModule,//بيعمل Expandable Panels (زي Accordion).
+    MatCheckboxModule,//عشان تعمل Checkbox (مربع اختيار).
+    MatIconModule,//بيوفرلك أيقونات جاهزة (Material Icons).
+    MatButtonModule,//بيستخدم لعمل أزرار (Buttons) بتصميم Material.
+    MatRadioModule,//بيستخدم لعمل Radio Buttons 
+    MatMenuModule//بيستخدم لعمل قوائم منسدلة
   ],
   providers: [],
   bootstrap: [AppComponent]

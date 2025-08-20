@@ -21,9 +21,9 @@ export class SidebarComponent {
     genderMale: false,
     acceptPromo: false,
     fee: 'any',
-    availability: 'any', // any | today | tomorrow | wed
-    entity: '', // hospital | clinic | center
-    role: 'any' // any | doctor | nurse
+    availability: 'any', 
+    entity: '', 
+    role: 'any' 
   };
 
   onFilterChange() {
