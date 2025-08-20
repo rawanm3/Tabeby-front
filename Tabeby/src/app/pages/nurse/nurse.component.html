@@ -122,14 +122,7 @@
                         {{ getStatusText(appointment.status) }}
                     </div>
                 </div>
-                <div class="appointment-actions">
-                    <button class="btn-icon" (click)="editAppointment(appointment)">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn-icon btn-danger" (click)="cancelAppointment(appointment)">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+                
             </div>
 
             <div class="empty-state" *ngIf="filteredAppointments.length === 0">

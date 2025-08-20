@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { SlotsService, Slot } from '../../services/slots.service';
 
-// ✨ تعريف النوع Appointment
+
 export interface Appointment {
   id: number;
   patientName: string;
@@ -65,7 +65,7 @@ export class DoctorComponent {
 
   constructor(private slotsService: SlotsService) {}
 
-  // ✅ فلترة المواعيد
+  // فلترة المواعيد
   get filteredAppointments(): Appointment[] {
     const now = new Date();
     return this.appointments.filter(apt => {
@@ -78,7 +78,7 @@ export class DoctorComponent {
     });
   }
 
-  // ✅ تحويل حالة الموعد لنص
+  //  تحويل حالة الموعد لنص
   getStatusText(status: Appointment['status']): string {
     const statusMap: Record<Appointment['status'], string> = {
       confirmed: 'مؤكد',
@@ -88,7 +88,7 @@ export class DoctorComponent {
     return statusMap[status];
   }
 
-  // ✅ مشاركة الرابط
+  //  مشاركة الرابط
   share() {
     if (navigator.share) {
       navigator.share({
@@ -121,7 +121,7 @@ export class DoctorComponent {
     });
   }
 
-  // ✅ فاليديشن على اسم المريض
+  //  فاليديشن على اسم المريض
   private validateAppointment(app: Omit<Appointment, 'id'>): string | null {
     if (!app.patientName || app.patientName.length < 3) {
       return 'اسم المريض يجب أن يكون 3 أحرف على الأقل';
