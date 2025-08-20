@@ -177,7 +177,7 @@ export class NurseComponent {
 
   editAppointment(appointment: Appointment) {
     console.log('تعديل الموعد:', appointment);
-    // يمكنك إضافة منطق التعديل هنا
+    
   }
 
   cancelAppointment(appointment: Appointment) {

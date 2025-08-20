@@ -123,7 +123,7 @@ export class DoctorComponent {
   }
 
   refreshAppointments() {
-    // في التطبيق الحقيقي، سيتم استدعاء API للحصول على أحدث المواعيد
+    
     console.log('جاري تحديث قائمة المواعيد...');
     
     
