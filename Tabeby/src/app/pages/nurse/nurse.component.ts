@@ -147,18 +147,6 @@ export class NurseComponent {
     return statusMap[status] || status;
   }
 
-  share() {
-    if (navigator.share) {
-      navigator.share({
-        title: 'ممرضة منى أحمد',
-        text: 'أفضل ممرضة متخصصة في الرعاية التمريضية',
-        url: window.location.href
-      });
-    } else {
-      alert('مشاركة غير متوفرة على هذا المتصفح');
-    }
-  }
-
   submitAppointment() {
     if (this.newAppointment.patientName && this.newAppointment.date && this.newAppointment.time) {
       const newId = this.appointments.length > 0 ? Math.max(...this.appointments.map(a => a.id)) + 1 : 1;

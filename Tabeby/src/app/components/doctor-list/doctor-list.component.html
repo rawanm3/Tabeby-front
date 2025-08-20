@@ -9,7 +9,6 @@
   <div class="doctors-list">
     <div *ngIf="doctors?.length === 0" class="no-doctors">No doctors found for the selected filters.</div>
     <div *ngFor="let doctor of sortedDoctors" class="doctor-card-wrapper">
-      <app-doctor-card [doctor]="doctor"></app-doctor-card>
     </div>
   </div>
 </div>

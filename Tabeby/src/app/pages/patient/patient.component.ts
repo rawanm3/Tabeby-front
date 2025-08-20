@@ -66,15 +66,5 @@ export class PatientComponent {
     specialInstructions: 'يجب إبلاغ الطبيب عن أي أعراض جديدة. الالتزام بالحمية الغذائية وتجنب الأطعمة الغنية بالصوديوم والسكريات.'
   };
 
-  share() {
-    if (navigator.share) {
-      navigator.share({
-        title: 'ملف المريض - ' + this.patient.name,
-        text: 'معلومات طبية مهمة للمريض ' + this.patient.name,
-        url: window.location.href
-      });
-    } else {
-      alert('مشاركة غير متوفرة على هذا المتصفح');
-    }
+
   }
-}

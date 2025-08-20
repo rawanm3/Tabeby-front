@@ -109,18 +109,7 @@ export class DoctorComponent {
     return statusMap[status] || status;
   }
 
-  share() {
-    if (navigator.share) {
-      navigator.share({
-        title: `د. ${this.doctor.name}`,
-        text: 'اطلع على صفحة الطبيب',
-        url: window.location.href
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('تم نسخ رابط الصفحة!');
-    }
-  }
+  
 
   refreshAppointments() {
     
