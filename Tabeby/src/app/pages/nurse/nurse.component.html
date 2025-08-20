@@ -1,0 +1,154 @@
+<div class="profile">
+    <header class="header">
+        <img [src]="nurse.photoUrl" alt="Nurse Photo" class="photo" />
+        <div class="meta">
+            <h2>ممرضة <span class="name">{{ nurse.name }}</span></h2>
+            <p class="title">{{ nurse.title }}</p>
+            
+            <div class="experience">
+                <i class="fas fa-award"></i>
+                <span>{{ nurse.experience }} سنوات خبرة</span>
+            </div>
+
+            <div class="rating">
+                <span class="stars">
+                    <ng-container *ngFor="let s of [1,2,3,4,5]; let i = index">
+                        <i class="star" [class.filled]="i < nurse.stars">★</i>
+                    </ng-container>
+                </span>
+                <span class="reviews">({{ nurse.reviews }} تقييم)</span>
+            </div>
+        </div>
+
+        <button class="share-btn" (click)="share()">
+            <i class="fas fa-share-alt"></i>
+        </button>
+    </header>
+
+    <nav class="tabs">
+        <button [class.active]="activeTab==='nurse'" (click)="activeTab='nurse'">معلومات الممرضة</button>
+        <button [class.active]="activeTab==='clinic'" (click)="activeTab='clinic'">معلومات العيادة</button>
+        <button [class.active]="activeTab==='appointments'" (click)="activeTab='appointments'">المواعيد</button>
+        <button [class.active]="activeTab==='services'" (click)="activeTab='services'">الخدمات التمريضية</button>
+    </nav>
+
+    <section class="tab-content" *ngIf="activeTab==='nurse'">
+        <h3>التخصص التمريضي</h3>
+        <p>{{ nurse.specialty }}</p>
+        
+        <h3>الشهادات والمؤهلات</h3>
+        <ul class="certificates">
+            <li *ngFor="let cert of nurse.certificates">
+                <i class="fas fa-certificate"></i> {{ cert }}
+            </li>
+        </ul>
+        
+        <h3>عن الممرضة</h3>
+        <p>{{ nurse.bio }}</p>
+    </section>
+
+    <section class="tab-content" *ngIf="activeTab==='clinic'">
+        <h3>معلومات العيادة</h3>
+        <p>{{ clinic.info }}</p>
+        <h3>ساعات العمل</h3>
+        <ul class="working-hours">
+            <li *ngFor="let hour of workingHours">
+                <span class="day">{{ hour.day }}</span>
+                <span class="time">{{ hour.time }}</span>
+            </li>
+        </ul>
+    </section>
+
+    <section class="tab-content appointments" *ngIf="activeTab==='appointments'">
+        <div class="appointment-header">
+            <h3>إدارة المواعيد</h3>
+            <div class="header-actions">
+                <button class="btn-secondary" (click)="refreshAppointments()">
+                    <i class="fas fa-sync-alt"></i> تحديث
+                </button>
+                <button class="btn-primary" (click)="showAppointmentForm = true">
+                    <i class="fas fa-plus"></i> إضافة موعد جديد
+                </button>
+            </div>
+        </div>
+
+        <div class="appointment-form" *ngIf="showAppointmentForm">
+            <h4>إضافة موعد جديد</h4>
+            <form (ngSubmit)="submitAppointment()" #appointmentForm="ngForm">
+                <div class="form-group">
+                    <label for="patientName">اسم المريض</label>
+                    <input type="text" id="patientName" name="patientName" [(ngModel)]="newAppointment.patientName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="appointmentDate">التاريخ</label>
+                    <input type="date" id="appointmentDate" name="appointmentDate" [(ngModel)]="newAppointment.date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="appointmentTime">الوقت</label>
+                    <input type="time" id="appointmentTime" name="appointmentTime" [(ngModel)]="newAppointment.time" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" (click)="showAppointmentForm = false">إلغاء</button>
+                    <button type="submit" class="btn-primary" [disabled]="!appointmentForm.valid">حفظ</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="appointment-filters">
+            <button [class.active]="appointmentFilter==='upcoming'" (click)="appointmentFilter='upcoming'">المواعيد القادمة</button>
+            <button [class.active]="appointmentFilter==='previous'" (click)="appointmentFilter='previous'">المواعيد السابقة</button>
+        </div>
+
+        <div class="appointment-list">
+            <div class="appointment-item" *ngFor="let appointment of filteredAppointments">
+                <div class="appointment-info">
+                    <div class="patient-name">{{ appointment.patientName }}</div>
+                    <div class="appointment-date">
+                        <i class="far fa-calendar-alt"></i>
+                        {{ appointment.date }}
+                    </div>
+                    <div class="appointment-time">
+                        <i class="far fa-clock"></i>
+                        {{ appointment.time }}
+                    </div>
+                    <div class="appointment-type">
+                        <i class="fas fa-stethoscope"></i>
+                        {{ appointment.type }}
+                    </div>
+                    <div class="appointment-status" [class]="appointment.status">
+                        {{ getStatusText(appointment.status) }}
+                    </div>
+                </div>
+                <div class="appointment-actions">
+                    <button class="btn-icon" (click)="editAppointment(appointment)">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-icon btn-danger" (click)="cancelAppointment(appointment)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="empty-state" *ngIf="filteredAppointments.length === 0">
+                <i class="far fa-calendar-check"></i>
+                <p>لا توجد مواعيد</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="tab-content" *ngIf="activeTab==='services'">
+        <h3>الخدمات التمريضية المقدمة</h3>
+        <div class="services-grid">
+            <div class="service-item" *ngFor="let service of nursingServices">
+                <div class="service-icon">
+                    <i class="{{ service.icon }}"></i>
+                </div>
+                <h4>{{ service.name }}</h4>
+                <p>{{ service.description }}</p>
+            </div>
+        </div>
+    </section>
+</div>
