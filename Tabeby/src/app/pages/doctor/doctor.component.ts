@@ -1,7 +1,26 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { SlotsService, Slot } from '../../services/slots.service';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+
+interface Doctor {
+  photoUrl: string;
+  name: string;
+  title: string;
+  stars: number;
+  reviews: number;
+  mainSpecialty: string;
+  bio: string;
+}
+
+interface Clinic {
+  info: string;
+}
+
+interface Appointment {
+  patientName: string;
+  date: string;
+  time: string;
+  status: string;
+}
 
 @Component({
   selector: 'app-doctor',
@@ -9,179 +28,184 @@ import { SlotsService, Slot } from '../../services/slots.service';
   styleUrls: ['./doctor.component.scss']
 })
 export class DoctorComponent {
-  activeTab: 'doctor' | 'clinic' | 'appointments' = 'doctor';
-  appointmentFilter: 'upcoming' | 'previous' = 'upcoming';
   showAppointmentForm = false;
-  showSuccessMessage = false;
-  showAvailableSlots = false;
-  availableSlots: Slot[] = [];
-  selectedAppointment: any = null;
+  appointmentForm!: FormGroup;
 
-  // ✅ Pattern للتحقق من الاسم: لازم يبدأ بحرف كابيتال أو عربي
-  namePattern = /^[A-Zأ-ي][a-zA-Zأ-ي\s]*$/;
-
-  newAppointment: any = {
-    patientName: '',
-    date: '',
-    time: '',
-    status: 'pending'
+  // Missing properties from template
+  doctor: Doctor = {
+    photoUrl: 'assets/images/doctor-placeholder.jpg',
+    name: 'دكتور أحمد محمد',
+    title: 'استشاري أمراض الباطنة',
+    stars: 4.5,
+    reviews: 127,
+    mainSpecialty: 'أمراض الباطنة والجهاز الهضمي',
+    bio: 'دكتور أحمد محمد هو استشاري أمراض الباطنة والجهاز الهضمي مع خبرة تزيد عن 15 عاماً في مجال الطب. حاصل على زمالة الكلية الملكية للأطباء في لندن.'
   };
 
-  doctor = {
-    name: 'سامي طارق',
-    title: 'إستشاري طب الأسنان',
-    photoUrl: 'https://via.placeholder.com/120x120.png?text=صورة',
-    stars: 5,
-    reviews: 74,
-    mainSpecialty: 'طب أسنان البالغين',
-    bio: 'طبيب أسنان خريج جامعة عين شمس. عضو الكلية الملكية للجراحين في أيرلندا. مقيم في قسم جراحة الوجه والفكين، جامعة عين شمس.'
+  clinic: Clinic = {
+    info: 'عيادة متخصصة في أمراض الباطنة والجهاز الهضمي. مفتوحة من السبت إلى الخميس من 9 صباحاً حتى 5 مساءً.'
   };
 
-  clinic = {
-    info: 'العنوان: 23 شارع أكتوبر، القاهرة - من الأحد إلى الخميس من 10:00 إلى 18:00، الهاتف: +20 123 456 789'
-  };
-
+  activeTab: string = 'doctor';
   workingHours = [
-    { day: 'الأحد', time: '10:00 ص - 6:00 م' },
-    { day: 'الإثنين', time: '10:00 ص - 6:00 م' },
-    { day: 'الثلاثاء', time: '10:00 ص - 6:00 م' },
-    { day: 'الأربعاء', time: '10:00 ص - 6:00 م' },
-    { day: 'الخميس', time: '10:00 ص - 6:00 م' },
-    { day: 'الجمعة', time: 'إجازة' },
-    { day: 'السبت', time: 'إجازة' }
+    { day: 'السبت', time: '9:00 ص - 5:00 م' },
+    { day: 'الأحد', time: '9:00 ص - 5:00 م' },
+    { day: 'الاثنين', time: '9:00 ص - 5:00 م' },
+    { day: 'الثلاثاء', time: '9:00 ص - 5:00 م' },
+    { day: 'الأربعاء', time: '9:00 ص - 5:00 م' },
+    { day: 'الخميس', time: '9:00 ص - 5:00 م' }
   ];
 
-  appointments = [
-    { id: 1, patientName: 'أحمد محمد', date: '2023-10-15', time: '10:00 ص', status: 'confirmed' },
-    { id: 2, patientName: 'فاطمة إبراهيم', date: '2023-10-16', time: '11:30 ص', status: 'confirmed' },
-    { id: 3, patientName: 'محمود السيد', date: '2023-10-17', time: '2:00 م', status: 'pending' },
-    { id: 4, patientName: 'سارة كمال', date: '2023-09-20', time: '10:00 ص', status: 'confirmed' },
-    { id: 5, patientName: 'علي حسن', date: '2023-09-15', time: '12:00 م', status: 'cancelled' }
-  ];
+  appointments: Appointment[] = [];
+  filteredAppointments: Appointment[] = [];
+  appointmentFilter: string = 'upcoming';
+  newAppointment: Partial<Appointment> = {};
+  showAvailableSlots: boolean = false;
+  showSuccessMessage: boolean = false;
+  availableSlots: any[] = [];
 
-  constructor(private slotsService: SlotsService) {}
+  constructor(private fb: FormBuilder) {}
 
-  get filteredAppointments() {
-    const now = new Date();
-    return this.appointments.filter(apt => {
-      const aptDate = new Date(apt.date);
-      if (this.appointmentFilter === 'upcoming') {
-        return aptDate >= now && apt.status !== 'cancelled';
-      } else {
-        return aptDate < now || apt.status === 'cancelled';
-      }
+  ngOnInit() {
+    this.appointmentForm = this.fb.group({
+      patientName: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern(/^[\u0621-\u064Aa-zA-Z\s]+$/)
+        ]
+      ],
+      date: ['', [Validators.required, this.futureDateValidator]],
+      time: ['', [Validators.required, this.futureTimeValidator.bind(this)]]
     });
+
+    this.loadAppointments();
   }
 
-  getStatusText(status: string): string {
-    const statusMap: {[key: string]: string} = {
-      'confirmed': 'مؤكد',
-      'pending': 'قيد الانتظار',
-      'cancelled': 'ملغي'
-    };
-    return statusMap[status] || status;
-  }
-
+  // Missing methods from template
   share() {
     if (navigator.share) {
       navigator.share({
-        title: `د. ${this.doctor.name}`,
-        text: 'اطلع على صفحة الطبيب',
+        title: 'دكتور ' + this.doctor.name,
+        text: 'احجز موعدك مع ' + this.doctor.name + ' - ' + this.doctor.title,
         url: window.location.href
-      }).catch(() => {});
+      });
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('تم نسخ رابط الصفحة!');
+      alert('مشاركة غير مدعومة في هذا المتصفح');
     }
   }
 
   refreshAppointments() {
-    console.log('جاري تحديث قائمة المواعيد...');
-    setTimeout(() => {
-      this.appointments = [...this.appointments].sort((a, b) => {
-        const dateA = new Date(a.date + ' ' + a.time);
-        const dateB = new Date(b.date + ' ' + b.time);
-        return dateB.getTime() - dateA.getTime();
-      });
-      console.log('تم تحديث المواعيد بنجاح');
-    }, 1000);
+    this.loadAppointments();
   }
 
-  updateAvailableSlots() {
-    this.slotsService.getAvailableSlots().subscribe(slots => {
-      this.availableSlots = slots;
-      this.showAvailableSlots = true;
-    });
-  }
-
-  submitAppointment() {
-    if (this.selectedAppointment) {
-      this.updateAppointment();
-      return;
-    }
-    const newId = Math.max(...this.appointments.map(a => a.id), 0) + 1;
-    this.appointments.push({
-      id: newId,
-      ...this.newAppointment
-    });
-
-    this.showAppointmentForm = false;
-    this.newAppointment = { patientName: '', date: '', time: '', status: 'pending' };
-
-    this.showSuccessMessage = true;
-    setTimeout(() => this.showSuccessMessage = false, 3000);
-
-    this.updateAvailableSlots();
-  }
-
-  editAppointment(appointment: any) {
-    this.selectedAppointment = { ...appointment };
-    this.showAppointmentForm = true;
-    this.newAppointment = {
-      patientName: appointment.patientName,
-      date: appointment.date,
-      time: appointment.time,
-      status: appointment.status
-    };
-  }
-
-  updateAppointment() {
-    if (this.selectedAppointment) {
-      const index = this.appointments.findIndex(a => a.id === this.selectedAppointment.id);
-      if (index !== -1) {
-        this.appointments[index] = {
-          ...this.selectedAppointment,
-          ...this.newAppointment
-        };
+  loadAppointments() {
+    // Load appointments from service or API
+    this.appointments = [
+      {
+        patientName: 'محمد أحمد',
+        date: '2024-01-15',
+        time: '10:00',
+        status: 'confirmed'
+      },
+      {
+        patientName: 'سارة محمد',
+        date: '2024-01-16',
+        time: '14:00',
+        status: 'pending'
       }
+    ];
+    this.filterAppointments();
+  }
 
-      this.showAppointmentForm = false;
-      this.selectedAppointment = null;
-      this.newAppointment = { patientName: '', date: '', time: '', status: 'pending' };
-
-      this.showSuccessMessage = true;
-      setTimeout(() => this.showSuccessMessage = false, 3000);
-
-      this.updateAvailableSlots();
+  filterAppointments() {
+    const today = new Date();
+    if (this.appointmentFilter === 'upcoming') {
+      this.filteredAppointments = this.appointments.filter(apt => new Date(apt.date) >= today);
+    } else {
+      this.filteredAppointments = this.appointments.filter(apt => new Date(apt.date) < today);
     }
   }
 
-  cancelAppointment(appointment: any) {
-    if (confirm(`هل تريد فعلاً إلغاء موعد ${appointment.patientName}؟`)) {
-      appointment.status = 'cancelled';
-      this.showSuccessMessage = true;
-      setTimeout(() => this.showSuccessMessage = false, 3000);
-      this.updateAvailableSlots();
+  editAppointment(appointment: Appointment) {
+    this.newAppointment = { ...appointment };
+    this.showAppointmentForm = true;
+  }
+
+  cancelAppointment(appointment: Appointment) {
+    if (confirm('هل أنت متأكد من إلغاء هذا الموعد؟')) {
+      this.appointments = this.appointments.filter(apt => apt !== appointment);
+      this.filterAppointments();
     }
   }
 
   bookSlot(slotId: string) {
-    const slot = this.availableSlots.find(s => s.id === slotId);
-    if (slot) {
-      this.newAppointment.date = slot.date;
-      this.newAppointment.time = slot.time;
-      this.showAppointmentForm = true;
-      this.showAvailableSlots = false;
+    console.log('Booking slot:', slotId);
+    this.showSuccessMessage = true;
+    setTimeout(() => {
+      this.showSuccessMessage = false;
+    }, 3000);
+  }
+
+  getStatusText(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'confirmed': 'مؤكد',
+      'pending': 'قيد الانتظار',
+      'cancelled': 'ملغي',
+      'completed': 'مكتمل'
+    };
+    return statusMap[status] || status;
+  }
+
+  // ✅ Validator: التاريخ ما يكونش في الماضي
+  futureDateValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) return null;
+    const today = new Date();
+    const selectedDate = new Date(control.value);
+
+    today.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    return selectedDate < today ? { pastDate: true } : null;
+  }
+
+  // ✅ Validator: الوقت لو التاريخ هو النهاردة
+  futureTimeValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value || !this.appointmentForm) return null;
+
+    const dateControl = this.appointmentForm.get('date');
+    if (!dateControl?.value) return null;
+
+    const selectedDate = new Date(dateControl.value);
+    const today = new Date();
+
+    if (
+      selectedDate.getFullYear() !== today.getFullYear() ||
+      selectedDate.getMonth() !== today.getMonth() ||
+      selectedDate.getDate() !== today.getDate()
+    ) {
+      return null;
+    }
+
+    const [hours, minutes] = control.value.split(':').map((x: string) => +x);
+    const selectedTime = new Date();
+    selectedTime.setHours(hours, minutes, 0, 0);
+
+    return selectedTime <= today ? { pastTime: true } : null;
+  }
+
+  submitAppointment() {
+    if (this.appointmentForm.valid) {
+      const appointment = this.appointmentForm.value as Appointment;
+      appointment.status = 'pending';
+      this.appointments.push(appointment);
+      this.filterAppointments();
+      console.log('✅ Appointment Saved:', appointment);
+      this.showAppointmentForm = false;
+      this.appointmentForm.reset();
+    } else {
+      this.appointmentForm.markAllAsTouched();
     }
   }
 }
