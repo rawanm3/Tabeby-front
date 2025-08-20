@@ -1,10 +1,17 @@
 import { NgModule } from '@angular/core';
+<<<<<<< HEAD
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+=======
+import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+
+>>>>>>> origin/hany
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HomeComponent } from './pages/home/home.component';
+<<<<<<< HEAD
 import { DoctorFilterPipe } from 'src/doctor-filter-pipe';
 import { DoctorListComponent } from './components/doctor-list/doctor-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,10 +31,16 @@ import { SortingDropdownComponent } from './components/sorting-dropdown/sorting-
 //import { DoctorListComponent } from './doctor-list/doctor-list.component';
 
 
+=======
+import { DoctorComponent } from './pages/doctor/doctor.component';
+import { NurseComponent } from './pages/nurse/nurse.component';
+import { PatientComponent } from './pages/patient/patient.component';
+>>>>>>> origin/hany
 
 @NgModule({
    declarations: [
     AppComponent,
+<<<<<<< HEAD
     //DoctorListComponent,
     DoctorFilterPipe,
   DoctorListComponent,
@@ -36,10 +49,18 @@ import { SortingDropdownComponent } from './components/sorting-dropdown/sorting-
   DoctorAppointmentComponent,
   SortingDropdownComponent,
   
+=======
+    HeaderComponent,
+    HomeComponent,
+    DoctorComponent,
+    NurseComponent,
+    PatientComponent
+>>>>>>> origin/hany
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+<<<<<<< HEAD
     FormsModule,
     BrowserAnimationsModule,
     MatSidenavModule,
@@ -49,8 +70,13 @@ import { SortingDropdownComponent } from './components/sorting-dropdown/sorting-
     MatButtonModule,
     MatRadioModule,
     MatMenuModule
+=======
+    FormsModule
   ],
-  providers: [],
+  providers: [
+    provideClientHydration()
+>>>>>>> origin/hany
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
