@@ -1,115 +1,69 @@
 <div class="sidebar">
-  <div class="sidebar-header">
-    <mat-icon class="sidebar-header-icon">filter_list</mat-icon>
-    <span class="sidebar-header-title">Filters</span>
-  </div>
-  <mat-accordion multi>
-    <mat-expansion-panel expanded>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon class="sidebar-section-icon">school</mat-icon>
-          Title
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.titleProfessor" (change)="onFilterChange()">Professor</mat-checkbox>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.titleLecturer" (change)="onFilterChange()">Lecturer</mat-checkbox>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.titleConsultant" (change)="onFilterChange()">Consultant</mat-checkbox>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.titleSpecialist" (change)="onFilterChange()">Specialist</mat-checkbox>
-    </mat-expansion-panel>
-    <mat-expansion-panel expanded>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon class="sidebar-section-icon">transgender</mat-icon>
-          Gender
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.genderFemale" (change)="onFilterChange()">Female</mat-checkbox>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.genderMale" (change)="onFilterChange()">Male</mat-checkbox>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon class="sidebar-section-icon">event_note</mat-icon>
-          Availability
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-radio-group [(ngModel)]="filter.availability" (change)="onFilterChange()">
-        <mat-radio-button value="any">Any</mat-radio-button><br>
-        <mat-radio-button value="today">Today</mat-radio-button><br>
-        <mat-radio-button value="tomorrow">Tomorrow</mat-radio-button><br>
-        <mat-radio-button value="wed">Wed 08/20</mat-radio-button>
-      </mat-radio-group>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon class="sidebar-section-icon">local_offer</mat-icon>
-          Promo Codes
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.acceptPromo" (change)="onFilterChange()">Accept Promo Codes</mat-checkbox>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon class="sidebar-section-icon">attach_money</mat-icon>
-          Examination Fee
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-radio-group class="sidebar-radio-group" [(ngModel)]="filter.fee" (change)="onFilterChange()">
-        <mat-radio-button class="sidebar-radio" value="any">Any</mat-radio-button><br>
-        <mat-radio-button class="sidebar-radio" value="lt50">Less than 50</mat-radio-button><br>
-        <mat-radio-button class="sidebar-radio" value="50-100">From 50 to 100</mat-radio-button><br>
-        <mat-radio-button class="sidebar-radio" value="100-200">From 100 to 200</mat-radio-button><br>
-        <mat-radio-button class="sidebar-radio" value="200-300">From 200 to 300</mat-radio-button><br>
-        <mat-radio-button class="sidebar-radio" value="gt300">Greater than 300</mat-radio-button>
-      </mat-radio-group>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon class="sidebar-section-icon">credit_card</mat-icon>
-          Payment Methods
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <!-- Payment methods options here -->
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon class="sidebar-section-icon">medical_services</mat-icon>
-          Entity
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-radio-group [(ngModel)]="filter.entity" (change)="onFilterChange()">
-        <mat-radio-button value="">Any</mat-radio-button><br>
-        <mat-radio-button value="hospital">Hospital</mat-radio-button><br>
-        <mat-radio-button value="clinic">Clinic</mat-radio-button><br>
-        <mat-radio-button value="center">Medical Center</mat-radio-button>
-      </mat-radio-group>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon class="sidebar-section-icon">person</mat-icon>
-          Role
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-radio-group [(ngModel)]="filter.role" (change)="onFilterChange()">
-        <mat-radio-button value="any">Any</mat-radio-button><br>
-        <mat-radio-button value="doctor">Doctor</mat-radio-button><br>
-        <mat-radio-button value="nurse">Nurse</mat-radio-button>
-      </mat-radio-group>
-    </mat-expansion-panel>
-  </mat-accordion>
-</div>
-<div class="dropdown">
-  <!-- عرض التسمية المختارة -->
-  <!-- {{ selectedLabel }} -->
+  <h3>فلترة الأطباء</h3>
 
-  <!-- <select [(ngModel)]="selected">
-    <option *ngFor="let opt of options" [value]="opt.value">
-      {{ opt.label }}
-    </option>
+  <!-- البحث بالاسم -->
+  <input 
+    type="text" 
+    placeholder="ابحث بالاسم"
+    [(ngModel)]="filter.name"
+    (input)="onFilterChange()" />
+
+  <!-- التخصص -->
+  <select [(ngModel)]="filter.specialty" (change)="onFilterChange()">
+    <option value="">اختر التخصص</option>
+    <option value="Cardiology">قلب</option>
+    <option value="Dermatology">جلدية</option>
+    <option value="Neurology">مخ وأعصاب</option>
+  </select>
+
+  <!-- المدينة -->
+  <input 
+    type="text" 
+    placeholder="المدينة"
+    [(ngModel)]="filter.city"
+    (input)="onFilterChange()" />
+
+  <!-- السعر -->
+  <input 
+    type="number" 
+    placeholder="أقصى سعر"
+    [(ngModel)]="filter.maxPrice"
+    (input)="onFilterChange()" />
+
+  <!-- النوع
+  <select [(ngModel)]="filter.gender" (change)="onFilterChange()">
+    <option value="">الكل</option>
+    <option value="male">ذكر</option>
+    <option value="female">أنثى</option>
   </select> -->
+
+  <!-- اللقب -->
+  <!-- <select [(ngModel)]="filter.title" (change)="onFilterChange()">
+    <option value="">الكل</option>
+    <option value="Professor">أستاذ</option>
+    <option value="Consultant">استشاري</option>
+    <option value="Specialist">أخصائي</option>
+  </select> -->
+
+  <!-- المواعيد -->
+  <!-- <select [(ngModel)]="filter.availability" (change)="onFilterChange()">
+    <option value="">الكل</option>
+    <option value="morning">صباحي</option>
+    <option value="evening">مسائي</option>
+  </select> -->
+
+  <hr />
+
+  <!-- عرض النتائج -->
+  <div *ngIf="doctors.length > 0">
+    <h4>النتائج:</h4>
+    <ul>
+      <li *ngFor="let doc of doctors">
+        {{ doc.userId.fullName }} - {{ doc.specialty }} - {{ doc.location }} - {{ doc.price }} جنيه
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="doctors.length === 0">
+    <p>لا توجد نتائج مطابقة.</p>
+  </div>
 </div>
