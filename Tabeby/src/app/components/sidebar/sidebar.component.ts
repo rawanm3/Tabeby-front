@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Doctor, DoctorFilterService } from 'src/app/services/doctor-filter.service';
+// import { Doctor, DoctorFilterService } from 'src/app/services/doctor-filter.service';
 import { DoctorFilterPipe } from 'src/doctor-filter-pipe';
 
 @Component({
@@ -11,7 +11,7 @@ import { DoctorFilterPipe } from 'src/doctor-filter-pipe';
 })
 export class SidebarComponent {
   @Output() filterChange = new EventEmitter<any>();
-  doctors: Doctor[] = [];
+  // doctors: Doctor[] = [];
 
   filter = {
     name: '',
@@ -19,7 +19,7 @@ export class SidebarComponent {
     city: '',
     maxPrice: null
   };
-  constructor(private doctorFilterService: DoctorFilterService) {}
+  // constructor(private doctorFilterService: DoctorFilterService) {}
 
   // applyFilter() {
   //   this.doctorFilterService.getDoctors(this.filter).subscribe((res) => {
@@ -32,10 +32,10 @@ export class SidebarComponent {
 //     this.doctors = res;
 //   });
 // }
- onFilterChange() {
-    this.doctorFilterService.getDoctors(this.filter).subscribe({
-      next: (res) => this.doctors = res,
-      error: (err) => console.error(err)
-    });
-  }
+//  onFilterChange() {
+//     this.doctorFilterService.getDoctors(this.filter).subscribe({
+//       next: (res) => this.doctors = res,
+//       error: (err) => console.error(err)
+//     });
+//   }
 }

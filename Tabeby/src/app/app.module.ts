@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
-<<<<<<< HEAD
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
-import { HomeComponent } from './pages/home/home.component';
+// import { HomeComponent } from './pages/home/home.component';
 import { DoctorFilterPipe } from 'src/doctor-filter-pipe';
 import { DoctorListComponent } from './components/doctor-list/doctor-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -51,28 +50,38 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 // import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 // import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
-=======
 import { DoctorComponent } from './pages/doctor/doctor.component';
 import { NurseComponent } from './pages/nurse/nurse.component';
 import { PatientComponent } from './pages/patient/patient.component';
->>>>>>> origin/hany
 
 @NgModule({
    declarations: [
     AppComponent,
     //DoctorListComponent,
     DoctorFilterPipe,
-  DoctorListComponent,
-  SidebarComponent,
-  DoctorCardComponent,
-  DoctorAppointmentComponent,
-  SortingDropdownComponent,
   
+
+  SortingDropdownComponent,
+  PatientComponent,
+  NurseComponent
+,DoctorComponent , 
+    // HomeComponent,
+    LoginComponent,
+    RegisterComponent,
+    FooterComponent,
+    AboutUsComponent,
+    ContactUsComponent,
+    VerifyOtpComponent,
+    ResetPasswordComponent,
+    ForgotPasswordComponent,
+    SidebarComponent,
+    DoctorCardComponent,
+    DoctorListComponent,
+    DoctorAppointmentComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-<<<<<<< HEAD
     FormsModule,
     BrowserAnimationsModule,
     MatSidenavModule,
@@ -80,7 +89,10 @@ import { PatientComponent } from './pages/patient/patient.component';
     MatIconModule,
     MatButtonModule,
     MatRadioModule,
-    MatMenuModule
+    MatMenuModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]
