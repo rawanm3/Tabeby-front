@@ -114,7 +114,7 @@ export class DoctorBookingComponent implements OnInit {
     while (current <= endDate) {
       const hours = current.getHours();
       const minutes = current.getMinutes();
-      const period = hours >= 12 ? 'PM' : 'AM';
+      const period = hours >= 12 ? 'PM' : 'PM';
       const displayHour = hours % 12 === 0 ? 12 : hours % 12;
       const displayMinutes = minutes.toString().padStart(2, '0');
       times.push(`${displayHour}:${displayMinutes} ${period}`);
