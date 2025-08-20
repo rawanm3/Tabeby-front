@@ -32,6 +32,8 @@ import { DoctorComponent } from './pages/doctor/doctor.component';
 import { NurseComponent } from './pages/nurse/nurse.component';
 import { PatientComponent } from './pages/patient/patient.component';
 import { DoctorAppointmentComponent } from './components/doctor-appointment/doctor-appointment.component';
+import { DoctorCardComponent } from './components/doctor-card/doctor-card.component';
+import { ChooseSlotComponent } from './components/choose-slot/choose-slot.component';
 
 @NgModule({
    declarations: [
@@ -55,6 +57,8 @@ DoctorBookingComponent,
     SidebarComponent,
     DoctorListComponent,
     DoctorAppointmentComponent,
+    DoctorCardComponent,
+    ChooseSlotComponent,
   ],
   imports: [
     BrowserModule,
