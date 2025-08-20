@@ -1,7 +1,14 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { SlotsService, Slot } from '../../services/slots.service';
+
+// ✨ تعريف النوع Appointment
+export interface Appointment {
+  id: number;
+  patientName: string;
+  date: string;
+  time: string;
+  status: 'confirmed' | 'pending' | 'cancelled';
+}
 
 @Component({
   selector: 'app-doctor',
@@ -15,9 +22,9 @@ export class DoctorComponent {
   showSuccessMessage = false;
   showAvailableSlots = false;
   availableSlots: Slot[] = [];
-  selectedAppointment: any = null;
-  
-  newAppointment: any = {
+  selectedAppointment: Appointment | null = null;
+
+  newAppointment: Omit<Appointment, 'id'> = {
     patientName: '',
     date: '',
     time: '',
@@ -48,47 +55,18 @@ export class DoctorComponent {
     { day: 'السبت', time: 'إجازة' }
   ];
 
-  appointments = [
-    { 
-      id: 1, 
-      patientName: 'أحمد محمد', 
-      date: '2023-10-15', 
-      time: '10:00 ص', 
-      status: 'confirmed' 
-    },
-    { 
-      id: 2, 
-      patientName: 'فاطمة إبراهيم', 
-      date: '2023-10-16', 
-      time: '11:30 ص', 
-      status: 'confirmed' 
-    },
-    { 
-      id: 3, 
-      patientName: 'محمود السيد', 
-      date: '2023-10-17', 
-      time: '2:00 م', 
-      status: 'pending' 
-    },
-    { 
-      id: 4, 
-      patientName: 'سارة كمال', 
-      date: '2023-09-20', 
-      time: '10:00 ص', 
-      status: 'confirmed' 
-    },
-    { 
-      id: 5, 
-      patientName: 'علي حسن', 
-      date: '2023-09-15', 
-      time: '12:00 م', 
-      status: 'cancelled' 
-    }
+  appointments: Appointment[] = [
+    { id: 1, patientName: 'أحمد محمد', date: '2023-10-15', time: '10:00 ص', status: 'confirmed' },
+    { id: 2, patientName: 'فاطمة إبراهيم', date: '2023-10-16', time: '11:30 ص', status: 'confirmed' },
+    { id: 3, patientName: 'محمود السيد', date: '2023-10-17', time: '2:00 م', status: 'pending' },
+    { id: 4, patientName: 'سارة كمال', date: '2023-09-20', time: '10:00 ص', status: 'confirmed' },
+    { id: 5, patientName: 'علي حسن', date: '2023-09-15', time: '12:00 م', status: 'cancelled' }
   ];
 
   constructor(private slotsService: SlotsService) {}
 
-  get filteredAppointments() {
+  // ✅ فلترة المواعيد
+  get filteredAppointments(): Appointment[] {
     const now = new Date();
     return this.appointments.filter(apt => {
       const aptDate = new Date(apt.date);
@@ -100,15 +78,17 @@ export class DoctorComponent {
     });
   }
 
-  getStatusText(status: string): string {
-    const statusMap: {[key: string]: string} = {
-      'confirmed': 'مؤكد',
-      'pending': 'قيد الانتظار',
-      'cancelled': 'ملغي'
+  // ✅ تحويل حالة الموعد لنص
+  getStatusText(status: Appointment['status']): string {
+    const statusMap: Record<Appointment['status'], string> = {
+      confirmed: 'مؤكد',
+      pending: 'قيد الانتظار',
+      cancelled: 'ملغي'
     };
-    return statusMap[status] || status;
+    return statusMap[status];
   }
 
+  // ✅ مشاركة الرابط
   share() {
     if (navigator.share) {
       navigator.share({
@@ -123,20 +103,13 @@ export class DoctorComponent {
   }
 
   refreshAppointments() {
-    // في التطبيق الحقيقي، سيتم استدعاء API للحصول على أحدث المواعيد
     console.log('جاري تحديث قائمة المواعيد...');
-    
-    
     setTimeout(() => {
-      
-      
-      
       this.appointments = [...this.appointments].sort((a, b) => {
         const dateA = new Date(a.date + ' ' + a.time);
         const dateB = new Date(b.date + ' ' + b.time);
         return dateB.getTime() - dateA.getTime();
       });
-      
       console.log('تم تحديث المواعيد بنجاح');
     }, 1000);
   }
@@ -148,7 +121,27 @@ export class DoctorComponent {
     });
   }
 
+  // ✅ فاليديشن على اسم المريض
+  private validateAppointment(app: Omit<Appointment, 'id'>): string | null {
+    if (!app.patientName || app.patientName.length < 3) {
+      return 'اسم المريض يجب أن يكون 3 أحرف على الأقل';
+    }
+    if (/\d/.test(app.patientName)) {
+      return 'اسم المريض لا يجب أن يحتوي على أرقام';
+    }
+    if (!app.date || !app.time) {
+      return 'يجب إدخال التاريخ والوقت';
+    }
+    return null;
+  }
+
   submitAppointment() {
+    const validationError = this.validateAppointment(this.newAppointment);
+    if (validationError) {
+      alert(validationError);
+      return;
+    }
+
     if (this.selectedAppointment) {
       this.updateAppointment();
       return;
@@ -159,29 +152,14 @@ export class DoctorComponent {
       id: newId,
       ...this.newAppointment
     });
-    
-    this.showAppointmentForm = false;
-    this.newAppointment = {
-      patientName: '',
-      date: '',
-      time: '',
-      status: 'pending'
-    };
-    
-    
+
+    this.resetForm();
     this.showSuccessMessage = true;
-    setTimeout(() => {
-      this.showSuccessMessage = false;
-    }, 3000);
-    
-    
+    setTimeout(() => (this.showSuccessMessage = false), 3000);
     this.updateAvailableSlots();
-    
-    
-  
   }
 
-  editAppointment(appointment: any) {
+  editAppointment(appointment: Appointment) {
     this.selectedAppointment = { ...appointment };
     this.showAppointmentForm = true;
     this.newAppointment = {
@@ -194,47 +172,33 @@ export class DoctorComponent {
 
   updateAppointment() {
     if (this.selectedAppointment) {
-      const index = this.appointments.findIndex(a => a.id === this.selectedAppointment.id);
+      const validationError = this.validateAppointment(this.newAppointment);
+      if (validationError) {
+        alert(validationError);
+        return;
+      }
+
+      const index = this.appointments.findIndex(a => a.id === this.selectedAppointment!.id);
       if (index !== -1) {
         this.appointments[index] = {
           ...this.selectedAppointment,
           ...this.newAppointment
         };
       }
-      
-      this.showAppointmentForm = false;
-      this.selectedAppointment = null;
-      this.newAppointment = {
-        patientName: '',
-        date: '',
-        time: '',
-        status: 'pending'
-      };
-      
-      
+
+      this.resetForm();
       this.showSuccessMessage = true;
-      setTimeout(() => {
-        this.showSuccessMessage = false;
-      }, 3000);
-      
-      
+      setTimeout(() => (this.showSuccessMessage = false), 3000);
       this.updateAvailableSlots();
     }
   }
 
-  cancelAppointment(appointment: any) {
+  cancelAppointment(appointment: Appointment) {
     if (confirm(`هل تريد فعلاً إلغاء موعد ${appointment.patientName}؟`)) {
       appointment.status = 'cancelled';
-      // Show success message
       this.showSuccessMessage = true;
-      setTimeout(() => {
-        this.showSuccessMessage = false;
-      }, 3000);
-      
-      // Update 
+      setTimeout(() => (this.showSuccessMessage = false), 3000);
       this.updateAvailableSlots();
-  
-      
     }
   }
 
@@ -246,5 +210,11 @@ export class DoctorComponent {
       this.showAppointmentForm = true;
       this.showAvailableSlots = false;
     }
+  }
+
+  private resetForm() {
+    this.showAppointmentForm = false;
+    this.selectedAppointment = null;
+    this.newAppointment = { patientName: '', date: '', time: '', status: 'pending' };
   }
 }

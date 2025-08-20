@@ -7,7 +7,7 @@ interface Appointment {
   patientName: string;
   date: string;
   time: string;
-  status: string;
+  status: 'confirmed' | 'pending' | 'completed' | 'cancelled';
   type: string;
 }
 
@@ -20,7 +20,7 @@ export class NurseComponent {
   activeTab: 'nurse' | 'clinic' | 'appointments' | 'services' = 'nurse';
   appointmentFilter: 'upcoming' | 'previous' = 'upcoming';
   showAppointmentForm = false;
-  newAppointment: any = {
+  newAppointment: Omit<Appointment, 'id' | 'type'> = {
     patientName: '',
     date: '',
     time: '',
@@ -137,14 +137,14 @@ export class NurseComponent {
     });
   }
 
-  getStatusText(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      'pending': 'قيد الانتظار',
-      'confirmed': 'مؤكد',
-      'completed': 'مكتمل',
-      'cancelled': 'ملغي'
+  getStatusText(status: Appointment['status']): string {
+    const statusMap: Record<Appointment['status'], string> = {
+      pending: 'قيد الانتظار',
+      confirmed: 'مؤكد',
+      completed: 'مكتمل',
+      cancelled: 'ملغي'
     };
-    return statusMap[status] || status;
+    return statusMap[status];
   }
 
   share() {
@@ -159,25 +159,53 @@ export class NurseComponent {
     }
   }
 
-  submitAppointment() {
-    if (this.newAppointment.patientName && this.newAppointment.date && this.newAppointment.time) {
-      const newId = this.appointments.length > 0 ? Math.max(...this.appointments.map(a => a.id)) + 1 : 1;
-      this.appointments.push({
-        id: newId,
-        patientName: this.newAppointment.patientName,
-        date: this.newAppointment.date,
-        time: this.newAppointment.time,
-        status: this.newAppointment.status,
-        type: 'زيارة تمريضية'
-      });
-      this.newAppointment = { patientName: '', date: '', time: '', status: 'pending' };
-      this.showAppointmentForm = false;
+  // ✅ فاليديشن على اسم المريض
+  private validateAppointment(app: Omit<Appointment, 'id' | 'type'>): string | null {
+    if (!app.patientName || app.patientName.length < 3) {
+      return 'اسم المريض يجب أن يكون 3 أحرف على الأقل';
     }
+    if (/\d/.test(app.patientName)) {
+      return 'اسم المريض لا يجب أن يحتوي على أرقام';
+    }
+    if (!app.date || !app.time) {
+      return 'يجب إدخال التاريخ والوقت';
+    }
+    return null;
+  }
+
+  submitAppointment() {
+    const validationError = this.validateAppointment(this.newAppointment);
+    if (validationError) {
+      alert(validationError);
+      return;
+    }
+
+    const newId = this.appointments.length > 0 ? Math.max(...this.appointments.map(a => a.id)) + 1 : 1;
+    this.appointments.push({
+      id: newId,
+      patientName: this.newAppointment.patientName,
+      date: this.newAppointment.date,
+      time: this.newAppointment.time,
+      status: this.newAppointment.status,
+      type: 'زيارة تمريضية'
+    });
+    
+    this.resetForm();
+  }
+
+  private resetForm() {
+    this.newAppointment = { patientName: '', date: '', time: '', status: 'pending' };
+    this.showAppointmentForm = false;
   }
 
   editAppointment(appointment: Appointment) {
-    console.log('تعديل الموعد:', appointment);
-    // يمكنك إضافة منطق التعديل هنا
+    this.newAppointment = {
+      patientName: appointment.patientName,
+      date: appointment.date,
+      time: appointment.time,
+      status: appointment.status
+    };
+    this.showAppointmentForm = true;
   }
 
   cancelAppointment(appointment: Appointment) {
