@@ -2,16 +2,10 @@ import { NgModule } from '@angular/core';
 <<<<<<< HEAD
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-=======
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-
->>>>>>> origin/hany
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HomeComponent } from './pages/home/home.component';
-<<<<<<< HEAD
 import { DoctorFilterPipe } from 'src/doctor-filter-pipe';
 import { DoctorListComponent } from './components/doctor-list/doctor-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,10 +20,36 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { DoctorCardComponent } from './components/doctor-card/doctor-card.component';
 import { DoctorAppointmentComponent } from './components/doctor-appointment/doctor-appointment.component';
 import { SortingDropdownComponent } from './components/sorting-dropdown/sorting-dropdown.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { AboutUsComponent } from './components/about-us/about-us.component';
+import { ContactUsComponent } from './components/contact-us/contact-us.component';
+import { VerifyOtpComponent } from './components/verify-otp/verify-otp.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 // import { DoctorFilterPipe } from './doctor-filter.pipe';
 //import { DoctorListComponent } from './doctor-list/doctor-list.component';
 
+// import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+// import { AppRoutingModule } from './app-routing.module';
+// import { AppComponent } from './app.component';
+// import { HeaderComponent } from './components/header/header.component';
+// import { HomeComponent } from './components/home/home.component';
+// import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+// import { LoginComponent } from './components/login/login.component';
+// import { AuthInterceptor } from './interceptors/auth.interceptor';
+// import { RegisterComponent } from './components/register/register.component';
+// import { PaymentComponent } from './components/payment/payment.component';
+// import { FooterComponent } from './components/footer/footer.component';
+// import { AboutUsComponent } from './components/about-us/about-us.component';
+// import { ContactUsComponent } from './components/contact-us/contact-us.component';
+// import { VerifyOtpComponent } from './components/verify-otp/verify-otp.component';
+// import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+// import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 =======
 import { DoctorComponent } from './pages/doctor/doctor.component';
@@ -40,7 +60,6 @@ import { PatientComponent } from './pages/patient/patient.component';
 @NgModule({
    declarations: [
     AppComponent,
-<<<<<<< HEAD
     //DoctorListComponent,
     DoctorFilterPipe,
   DoctorListComponent,
@@ -49,13 +68,6 @@ import { PatientComponent } from './pages/patient/patient.component';
   DoctorAppointmentComponent,
   SortingDropdownComponent,
   
-=======
-    HeaderComponent,
-    HomeComponent,
-    DoctorComponent,
-    NurseComponent,
-    PatientComponent
->>>>>>> origin/hany
   ],
   imports: [
     BrowserModule,
@@ -65,18 +77,12 @@ import { PatientComponent } from './pages/patient/patient.component';
     BrowserAnimationsModule,
     MatSidenavModule,
     MatExpansionModule,
-    MatCheckboxModule,
     MatIconModule,
     MatButtonModule,
     MatRadioModule,
     MatMenuModule
-=======
-    FormsModule
   ],
-  providers: [
-    provideClientHydration()
->>>>>>> origin/hany
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
