@@ -16,7 +16,10 @@ export class DoctorComponent {
   showAvailableSlots = false;
   availableSlots: Slot[] = [];
   selectedAppointment: any = null;
-  
+
+  // ✅ Pattern للتحقق من الاسم: لازم يبدأ بحرف كابيتال أو عربي
+  namePattern = /^[A-Zأ-ي][a-zA-Zأ-ي\s]*$/;
+
   newAppointment: any = {
     patientName: '',
     date: '',
@@ -49,41 +52,11 @@ export class DoctorComponent {
   ];
 
   appointments = [
-    { 
-      id: 1, 
-      patientName: 'أحمد محمد', 
-      date: '2023-10-15', 
-      time: '10:00 ص', 
-      status: 'confirmed' 
-    },
-    { 
-      id: 2, 
-      patientName: 'فاطمة إبراهيم', 
-      date: '2023-10-16', 
-      time: '11:30 ص', 
-      status: 'confirmed' 
-    },
-    { 
-      id: 3, 
-      patientName: 'محمود السيد', 
-      date: '2023-10-17', 
-      time: '2:00 م', 
-      status: 'pending' 
-    },
-    { 
-      id: 4, 
-      patientName: 'سارة كمال', 
-      date: '2023-09-20', 
-      time: '10:00 ص', 
-      status: 'confirmed' 
-    },
-    { 
-      id: 5, 
-      patientName: 'علي حسن', 
-      date: '2023-09-15', 
-      time: '12:00 م', 
-      status: 'cancelled' 
-    }
+    { id: 1, patientName: 'أحمد محمد', date: '2023-10-15', time: '10:00 ص', status: 'confirmed' },
+    { id: 2, patientName: 'فاطمة إبراهيم', date: '2023-10-16', time: '11:30 ص', status: 'confirmed' },
+    { id: 3, patientName: 'محمود السيد', date: '2023-10-17', time: '2:00 م', status: 'pending' },
+    { id: 4, patientName: 'سارة كمال', date: '2023-09-20', time: '10:00 ص', status: 'confirmed' },
+    { id: 5, patientName: 'علي حسن', date: '2023-09-15', time: '12:00 م', status: 'cancelled' }
   ];
 
   constructor(private slotsService: SlotsService) {}
@@ -123,20 +96,13 @@ export class DoctorComponent {
   }
 
   refreshAppointments() {
-    // في التطبيق الحقيقي، سيتم استدعاء API للحصول على أحدث المواعيد
     console.log('جاري تحديث قائمة المواعيد...');
-    
-    
     setTimeout(() => {
-      
-      
-      
       this.appointments = [...this.appointments].sort((a, b) => {
         const dateA = new Date(a.date + ' ' + a.time);
         const dateB = new Date(b.date + ' ' + b.time);
         return dateB.getTime() - dateA.getTime();
       });
-      
       console.log('تم تحديث المواعيد بنجاح');
     }, 1000);
   }
@@ -153,32 +119,19 @@ export class DoctorComponent {
       this.updateAppointment();
       return;
     }
-
     const newId = Math.max(...this.appointments.map(a => a.id), 0) + 1;
     this.appointments.push({
       id: newId,
       ...this.newAppointment
     });
-    
+
     this.showAppointmentForm = false;
-    this.newAppointment = {
-      patientName: '',
-      date: '',
-      time: '',
-      status: 'pending'
-    };
-    
-    
+    this.newAppointment = { patientName: '', date: '', time: '', status: 'pending' };
+
     this.showSuccessMessage = true;
-    setTimeout(() => {
-      this.showSuccessMessage = false;
-    }, 3000);
-    
-    
+    setTimeout(() => this.showSuccessMessage = false, 3000);
+
     this.updateAvailableSlots();
-    
-    
-  
   }
 
   editAppointment(appointment: any) {
@@ -201,23 +154,14 @@ export class DoctorComponent {
           ...this.newAppointment
         };
       }
-      
+
       this.showAppointmentForm = false;
       this.selectedAppointment = null;
-      this.newAppointment = {
-        patientName: '',
-        date: '',
-        time: '',
-        status: 'pending'
-      };
-      
-      
+      this.newAppointment = { patientName: '', date: '', time: '', status: 'pending' };
+
       this.showSuccessMessage = true;
-      setTimeout(() => {
-        this.showSuccessMessage = false;
-      }, 3000);
-      
-      
+      setTimeout(() => this.showSuccessMessage = false, 3000);
+
       this.updateAvailableSlots();
     }
   }
@@ -225,16 +169,9 @@ export class DoctorComponent {
   cancelAppointment(appointment: any) {
     if (confirm(`هل تريد فعلاً إلغاء موعد ${appointment.patientName}؟`)) {
       appointment.status = 'cancelled';
-      // Show success message
       this.showSuccessMessage = true;
-      setTimeout(() => {
-        this.showSuccessMessage = false;
-      }, 3000);
-      
-      // Update 
+      setTimeout(() => this.showSuccessMessage = false, 3000);
       this.updateAvailableSlots();
-  
-      
     }
   }
 
