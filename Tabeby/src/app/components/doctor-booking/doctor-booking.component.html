@@ -1,10 +1,8 @@
 <div class="container">
   <!-- Steps Indicator -->
   <div class="steps-indicator">
-    <div class="step" *ngFor="let step of steps" [ngClass]="{
-        'completed': step.status === 'completed',
-        'active': step.status === 'active'
-      }">
+    <div class="step" *ngFor="let step of steps"
+      [ngClass]="{'completed': step.status === 'completed','active': step.status === 'active'}">
       <div class="step-number">{{ step.number }}</div>
       <div class="step-text">{{ step.text }}</div>
     </div>
@@ -92,6 +90,7 @@
           </div>
         </div>
 
+
         <!-- زر لعرض الأيام المتبقية -->
         <button *ngIf="remainingDays.length > 0" class="nav-btn" (click)="toggleRemainingDays()">
           {{ showRemainingDays ? 'Hide More Days' : 'Show More Days' }}
@@ -135,9 +134,10 @@
         <form [formGroup]="bookingForm" (ngSubmit)="confirmBooking()">
           <div class="form-group">
             <label for="name">Full Name</label>
-            <input id="name" type="text" class="form-control" formControlName="name"
-              placeholder="Enter your full name" />
-            <div *ngIf="bookingForm.get('name')?.invalid && bookingForm.get('name')?.touched" class="error">
+
+            <input id="name" type="text" class="form-control" formControlName="name"placeholder="Enter your full name" />
+
+            <div *ngIf="bookingForm.get('name')?.invalid && bookingForm.get('name')?.dirty" class="error">
               Name is required (at least 3 characters)
             </div>
           </div>
