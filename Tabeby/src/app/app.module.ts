@@ -7,11 +7,13 @@ import { DoctorBookingComponent } from './components/doctor-booking/doctor-booki
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './components/login/login.component';
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     DoctorBookingComponent,
+    LoginComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, CommonModule, HttpClientModule],
   providers: [],

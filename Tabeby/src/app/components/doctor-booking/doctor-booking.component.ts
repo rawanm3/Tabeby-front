@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BookingService } from 'src/app/services/booking.service';
 import Swal from 'sweetalert2';
+import { BookingService } from 'src/app/services/booking.service';
 
 @Component({
   selector: 'app-doctor-booking',
@@ -11,17 +11,7 @@ import Swal from 'sweetalert2';
 export class DoctorBookingComponent implements OnInit {
   bookingForm!: FormGroup;
 
-  doctor = {
-    name: 'Dr. Ahmed Ali',
-    specialty: 'Cardiologist',
-    price: 500,
-    address: '123 Health Street, Cairo',
-    experience: 10,
-    patients: 1200,
-    description:
-      'Dr. Ahmed Ali is a highly experienced cardiologist specializing in heart health and preventive care. He is known for his patient-centered approach and thorough consultations.',
-  };
-
+  doctor: any = null;
   steps = [
     { number: 1, text: 'Choose Date', status: 'active' },
     { number: 2, text: 'Select Time', status: 'pending' },
@@ -32,50 +22,42 @@ export class DoctorBookingComponent implements OnInit {
   availableDays: string[] = [];
   firstDays: string[] = [];
   remainingDays: string[] = [];
-  showRemainingDays: boolean = false;
+  showRemainingDays = false;
 
   availableTimes: string[] = [];
   firstTimes: string[] = [];
   remainingTimes: string[] = [];
-  showRemainingTimes: boolean = false;
+  showRemainingTimes = false;
 
   selectedDay: string | null = null;
   selectedTime: string | null = null;
 
-  reviews = [
-    {
-      author: 'Ahmed Ali',
-      text: 'Excellent doctor, very professional!',
-      rating: 5,
-    },
-    {
-      author: 'Sara Mohamed',
-      text: 'Good experience, friendly staff.',
-      rating: 4,
-    },
-    { author: 'Omar Khaled', text: 'Average consultation.', rating: 3 },
-  ];
-
-  averageRating: number = 0;
+  reviews: any[] = [];
+  averageRating = 0;
   showFullDescription = false;
   loading = false;
-//----------------------------------------------------
-  constructor(
-    private fb: FormBuilder,
-    private bookingService: BookingService
-  ) {}
-//-------------------------------------------
+
+  constructor(private fb: FormBuilder, private bookingService: BookingService) {}
+
   ngOnInit(): void {
     this.bookingForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      phone: [
-        '',
-        [Validators.required, Validators.pattern('^\\+?[0-9]{8,15}$')],
-      ],
+      phone: ['', [Validators.required, Validators.pattern('^\\+?[0-9]{8,15}$')]],
       email: ['', [Validators.email]],
       notes: [''],
       age: ['', [Validators.required, Validators.min(1), Validators.max(120)]],
       residence: ['', Validators.required],
+    });
+
+    // جلب أول دكتور من الباك‌اند
+    this.bookingService.getDoctors().subscribe({
+      next: (res) => {
+        if (res.length > 0) {
+          this.doctor = res[0];
+          this.loadReviews(this.doctor._id);
+        }
+      },
+      error: (err) => console.error(err),
     });
 
     this.availableDays = this.generateAvailableDays(21);
@@ -85,14 +67,25 @@ export class DoctorBookingComponent implements OnInit {
     this.availableTimes = this.generateTimeSlots('12:00 PM', '11:30 PM', 30);
     this.firstTimes = this.availableTimes.slice(0, 5);
     this.remainingTimes = this.availableTimes.slice(5);
+  }
 
-    if (this.reviews.length > 0) {
-      const total = this.reviews.reduce(
-        (sum, review) => sum + review.rating,
-        0
-      );
-      this.averageRating = +(total / this.reviews.length).toFixed(1);
-    }
+  // دالة لتحويل يوم بصيغة Month Day Year إلى Day Month
+  getDayMonth(day: string): string {
+    const parts = day.split(' ');
+    return parts[1].replace(',', '') + ' ' + parts[0];
+  }
+
+  loadReviews(doctorId: string) {
+    this.bookingService.getDoctorReviews(doctorId).subscribe({
+      next: (res: any[]) => {
+        this.reviews = res;
+        if (this.reviews.length > 0) {
+          const total = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+          this.averageRating = +(total / this.reviews.length).toFixed(1);
+        }
+      },
+      error: (err) => console.error(err),
+    });
   }
 
   generateAvailableDays(count: number): string[] {
@@ -107,76 +100,42 @@ export class DoctorBookingComponent implements OnInit {
   }
 
   formatDate(date: Date): string {
-    const options: Intl.DateTimeFormatOptions = {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  generateTimeSlots(startTime: string, endTime: string, intervalMinutes: number): string[] {
+    const times: string[] = [];
+    const parseTime = (timeStr: string) => {
+      const [hourStr, minuteStr] = timeStr.split(':');
+      return [parseInt(hourStr), parseInt(minuteStr)];
     };
-    return date.toLocaleDateString('en-US', options);
+
+    let [startHour, startMinutes] = parseTime(startTime);
+    let [endHour, endMinutes] = parseTime(endTime);
+    if (startHour < 12) startHour += 12;
+    if (endHour < 12) endHour += 12;
+
+    const current = new Date();
+    current.setHours(startHour, startMinutes, 0, 0);
+    const endDate = new Date();
+    endDate.setHours(endHour, endMinutes, 0, 0);
+
+    while (current <= endDate) {
+      const hours = current.getHours();
+      const minutes = current.getMinutes();
+      const displayHour = hours > 12 ? hours - 12 : hours;
+      const displayMinutes = minutes.toString().padStart(2, '0');
+      times.push(`${displayHour}:${displayMinutes} PM`);
+      current.setMinutes(current.getMinutes() + intervalMinutes);
+    }
+    return times;
   }
 
-generateTimeSlots(
-  startTime: string,
-  endTime: string,
-  intervalMinutes: number
-): string[] {
-  const times: string[] = [];
+  toggleRemainingDays() { this.showRemainingDays = !this.showRemainingDays; }
+  toggleRemainingTimes() { this.showRemainingTimes = !this.showRemainingTimes; }
+  toggleDescription() { this.showFullDescription = !this.showFullDescription; }
 
-  const parseTime = (timeStr: string) => {
-    const [hourStr, minuteStr] = timeStr.split(':');
-    return [parseInt(hourStr), parseInt(minuteStr)];
-  };
-
-  let [startHour, startMinutes] = parseTime(startTime);
-  let [endHour, endMinutes] = parseTime(endTime);
-
-
-  if (startHour < 12) startHour += 12;
-  if (endHour < 12) endHour += 12;
-
-  const current = new Date();
-  current.setHours(startHour, startMinutes, 0, 0);
-
-  const endDate = new Date();
-  endDate.setHours(endHour, endMinutes, 0, 0);
-
-  while (current <= endDate) {
-    const hours = current.getHours();
-    const minutes = current.getMinutes();
-
-
-    const displayHour = hours > 12 ? hours - 12 : hours;
-    const displayMinutes = minutes.toString().padStart(2, '0');
-
-    times.push(`${displayHour}:${displayMinutes} PM`);
-    current.setMinutes(current.getMinutes() + intervalMinutes);
-  }
-
-  return times;
-}
-
-
-  parseTime(timeStr: string): [number, number, string] {
-    const [time, period] = timeStr.split(' ');
-    const [hour, minute] = time.split(':').map(Number);
-    return [hour, minute, period];
-  }
-
-  toggleRemainingDays() {
-    this.showRemainingDays = !this.showRemainingDays;
-  }
-
-  toggleRemainingTimes() {
-    this.showRemainingTimes = !this.showRemainingTimes;
-  }
-
-  toggleDescription() {
-    this.showFullDescription = !this.showFullDescription;
-  }
-
-  get f() {
-    return this.bookingForm.controls;
-  }
+  get f() { return this.bookingForm.controls; }
 
   selectDay(day: string) {
     this.selectedDay = day;
@@ -188,20 +147,10 @@ generateTimeSlots(
     this.updateSteps(3);
   }
 
-  getDayMonth(day: string): string {
-    const parts = day.split(' ');
-    return parts[1].replace(',', '') + ' ' + parts[0];
-  }
-
   confirmBooking() {
     if (this.loading) return;
-
     if (this.bookingForm.invalid || !this.selectedDay || !this.selectedTime) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Incomplete Form',
-        text: 'Please complete all fields and select date & time.',
-      });
+      Swal.fire({ icon: 'warning', title: 'Incomplete Form', text: 'Please complete all fields and select date & time.' });
       return;
     }
 
@@ -209,8 +158,8 @@ generateTimeSlots(
     this.updateSteps(4);
 
     const bookingData = {
-      doctor: this.doctor.name,
-      specialty: this.doctor.specialty,
+      doctor: this.doctor?.name,
+      specialty: this.doctor?.specialty,
       date: this.selectedDay,
       time: this.selectedTime,
       patient: this.bookingForm.value,
@@ -218,40 +167,27 @@ generateTimeSlots(
 
     this.bookingService.createBooking(bookingData).subscribe({
       next: () => {
+        Swal.fire({ icon: 'success', title: 'Booking Confirmed!', text: '✅ Your booking is confirmed!', timer: 3000, showConfirmButton: false });
         this.bookingForm.reset();
         this.selectedDay = null;
         this.selectedTime = null;
         this.updateSteps(1);
         this.loading = false;
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Booking Confirmed!',
-          text: '✅ Your booking is confirmed! You will receive a confirmation SMS.',
-          timer: 3000,
-          showConfirmButton: false,
-        });
       },
       error: () => {
+        Swal.fire({ icon: 'error', title: 'Booking Failed', text: '❌ Failed to confirm booking. Please try again.' });
         this.loading = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'Booking Failed',
-          text: '❌ Failed to confirm booking. Please try again.',
-        });
       },
     });
   }
 
   updateSteps(activeStep: number) {
-    this.steps = this.steps.map((step) => {
+    this.steps = this.steps.map(step => {
       if (step.number < activeStep) return { ...step, status: 'completed' };
       else if (step.number === activeStep) return { ...step, status: 'active' };
       else return { ...step, status: 'upcoming' };
     });
   }
 
-  getRoundedRating(): number {
-    return Math.round(this.averageRating);
-  }
+  getRoundedRating(): number { return Math.round(this.averageRating); }
 }
