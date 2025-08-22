@@ -1,0 +1,139 @@
+.sidebar {
+  background: #0070c9;
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 40px 24px 40px 24px;
+  color: #fff;
+  min-width: 270px;
+  max-width: 340px;
+  margin-bottom: 40px;
+  margin-top: 0;
+}
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28px;
+}
+.sidebar-header-icon {
+  color: #fff;
+  font-size: 2.1rem;
+  margin-right: 10px;
+}
+.sidebar-header-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #fff;
+}
+.mat-expansion-panel {
+  background: transparent !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  border-radius: 12px !important;
+  margin-bottom: 8px;
+}
+.mat-expansion-panel-header {
+  color: #fff !important;
+  font-weight: bold;
+}
+.sidebar-section-icon {
+  color: #fff;
+  margin-right: 8px;
+}
+.sidebar-checkbox .mat-checkbox-background, .sidebar-radio .mat-radio-inner-circle {
+  background: #fff !important;
+}
+.sidebar-checkbox .mat-checkbox-frame, .sidebar-radio .mat-radio-outer-circle {
+  border-color: #fff !important;
+}
+.sidebar-checkbox .mat-checkbox-label, .sidebar-radio .mat-radio-label-content {
+  color: #fff !important;
+  font-size: 1.05rem;
+}
+.sidebar-radio-group {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.sidebar-radio {
+  color: #fff !important;
+  margin-bottom: 4px;
+}
+.mat-expansion-panel-content {
+  color: #fff !important;
+}
+.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #e53935 !important;
+}
+.mat-radio-checked .mat-radio-inner-circle {
+  background: #e53935 !important;
+}
+.mat-checkbox-checked .mat-checkbox-background {
+  background: #e53935 !important;
+}
+.sidebar {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  width: 270px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.sidebar-header {
+  background: #0070c9;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 24px;
+  height: 48px;
+  font-weight: bold;
+  font-size: 1.15rem;
+}
+.sidebar-header-icon {
+  margin-right: 8px;
+  font-size: 22px;
+}
+.sidebar-header-title {
+  font-weight: bold;
+}
+.sidebar-section {
+  background: #fff;
+  padding: 0 0 0 0;
+}
+.sidebar-section.expanded {
+  background: #fff;
+  padding: 12px 0 8px 0;
+}
+.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  color: #0070c9;
+  font-weight: bold;
+  font-size: 1.08rem;
+  padding: 12px 24px 0 24px;
+  position: relative;
+}
+.sidebar-section-icon {
+  margin-right: 7px;
+  color: #0070c9;
+  font-size: 22px;
+}
+.sidebar-section-arrow {
+  margin-left: auto;
+  color: #0070c9;
+  font-size: 20px;
+}
+.sidebar-section-content {
+  padding: 0 24px 0 48px;
+  margin-top: 8px;
+}
+.sidebar-checkbox {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  color: #222;
+}
+.sidebar-divider {
+  height: 1px;
+  background: #e3eafc;
+  margin: 0 16px;
+}

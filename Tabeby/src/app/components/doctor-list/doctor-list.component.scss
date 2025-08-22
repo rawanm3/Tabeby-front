@@ -1,0 +1,41 @@
+.doctor-list-container {
+  width: 100%;
+  background: rgba(255,255,255,0.7);
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  padding: 24px 0 32px 0;
+  margin-bottom: 32px;
+}
+.doctor-list-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #1976d2;
+  margin-bottom: 24px;
+  padding-left: 40px;
+}
+.doctor-list-count {
+  color: #888;
+  font-size: 1.1rem;
+  font-weight: normal;
+}
+.doctors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+  align-items: center;
+}
+.doctor-card-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+}
+.no-doctors {
+  color: #e53935;
+  font-size: 1.15rem;
+  margin: 32px 0;
+  text-align: center;
+}

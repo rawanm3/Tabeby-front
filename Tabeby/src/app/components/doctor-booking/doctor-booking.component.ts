@@ -32,8 +32,13 @@ export class DoctorBookingComponent implements OnInit {
   selectedDay: string | null = null;
   selectedTime: string | null = null;
 
-  reviews: any[] = [];
-  averageRating = 0;
+  reviews = [
+    { author: 'Ahmed Ali', text: 'Excellent doctor, very professional!', rating: 5 },
+    { author: 'Sara Mohamed', text: 'Good experience, friendly staff.', rating: 4 },
+    { author: 'Omar Khaled', text: 'Average consultation.', rating: 3 },
+  ];
+
+  averageRating: number = 0;
   showFullDescription = false;
   loading = false;
 
@@ -64,6 +69,7 @@ export class DoctorBookingComponent implements OnInit {
     this.firstDays = this.availableDays.slice(0, 7);
     this.remainingDays = this.availableDays.slice(7);
 
+    // توليد أوقات اليوم كل نصف ساعة
     this.availableTimes = this.generateTimeSlots('12:00 PM', '11:30 PM', 30);
     this.firstTimes = this.availableTimes.slice(0, 5);
     this.remainingTimes = this.availableTimes.slice(5);
@@ -103,31 +109,37 @@ export class DoctorBookingComponent implements OnInit {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
+    parseTime(time: string): [number, number, string] {
+    // time مثل "12:30 PM"
+    const [hourMin, period] = time.split(' ');
+    const [hourStr, minStr] = hourMin.split(':');
+    return [parseInt(hourStr, 10), parseInt(minStr, 10), period];
+  }
+
   generateTimeSlots(startTime: string, endTime: string, intervalMinutes: number): string[] {
     const times: string[] = [];
-    const parseTime = (timeStr: string) => {
-      const [hourStr, minuteStr] = timeStr.split(':');
-      return [parseInt(hourStr), parseInt(minuteStr)];
-    };
+    let [startHour, startMinutes, startPeriod] = this.parseTime(startTime);
+    let [endHour, endMinutes, endPeriod] = this.parseTime(endTime);
 
-    let [startHour, startMinutes] = parseTime(startTime);
-    let [endHour, endMinutes] = parseTime(endTime);
-    if (startHour < 12) startHour += 12;
-    if (endHour < 12) endHour += 12;
+    const to24Hour = (hour: number, period: string) =>
+      period === 'PM' && hour < 12 ? hour + 12 : period === 'AM' && hour === 12 ? 0 : hour;
 
     const current = new Date();
-    current.setHours(startHour, startMinutes, 0, 0);
+    current.setHours(to24Hour(startHour, startPeriod), startMinutes, 0, 0);
+
     const endDate = new Date();
-    endDate.setHours(endHour, endMinutes, 0, 0);
+    endDate.setHours(to24Hour(endHour, endPeriod), endMinutes, 0, 0);
 
     while (current <= endDate) {
       const hours = current.getHours();
       const minutes = current.getMinutes();
-      const displayHour = hours > 12 ? hours - 12 : hours;
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const displayHour = hours % 12 === 0 ? 12 : hours % 12;
       const displayMinutes = minutes.toString().padStart(2, '0');
-      times.push(`${displayHour}:${displayMinutes} PM`);
+      times.push(`${displayHour}:${displayMinutes} ${period}`);
       current.setMinutes(current.getMinutes() + intervalMinutes);
     }
+
     return times;
   }
 
@@ -148,38 +160,56 @@ export class DoctorBookingComponent implements OnInit {
   }
 
   confirmBooking() {
-    if (this.loading) return;
-    if (this.bookingForm.invalid || !this.selectedDay || !this.selectedTime) {
-      Swal.fire({ icon: 'warning', title: 'Incomplete Form', text: 'Please complete all fields and select date & time.' });
-      return;
-    }
+  // منع الضغط أثناء التحميل
+  if (this.loading) return;
 
-    this.loading = true;
-    this.updateSteps(4);
-
-    const bookingData = {
-      doctor: this.doctor?.name,
-      specialty: this.doctor?.specialty,
-      date: this.selectedDay,
-      time: this.selectedTime,
-      patient: this.bookingForm.value,
-    };
-
-    this.bookingService.createBooking(bookingData).subscribe({
-      next: () => {
-        Swal.fire({ icon: 'success', title: 'Booking Confirmed!', text: '✅ Your booking is confirmed!', timer: 3000, showConfirmButton: false });
-        this.bookingForm.reset();
-        this.selectedDay = null;
-        this.selectedTime = null;
-        this.updateSteps(1);
-        this.loading = false;
-      },
-      error: () => {
-        Swal.fire({ icon: 'error', title: 'Booking Failed', text: '❌ Failed to confirm booking. Please try again.' });
-        this.loading = false;
-      },
+  if (this.bookingForm.invalid || !this.selectedDay || !this.selectedTime) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Incomplete Form',
+      text: 'Please complete all fields and select date & time.',
     });
+    return;
   }
+
+  this.loading = true; // بدء التحميل
+  this.updateSteps(4);
+
+  const bookingData = {
+    doctor: this.doctor.name,
+    specialty: this.doctor.specialty,
+    date: this.selectedDay,
+    time: this.selectedTime,
+    patient: this.bookingForm.value,
+  };
+
+  this.bookingService.createBooking(bookingData).subscribe({
+    next: () => {
+      this.bookingForm.reset();
+      this.selectedDay = null;
+      this.selectedTime = null;
+      this.updateSteps(1);
+      this.loading = false;
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Booking Confirmed!',
+        text: '✅ Your booking is confirmed! You will receive a confirmation SMS.',
+        timer: 3000,
+        showConfirmButton: false,
+      });
+    },
+    error: () => {
+      this.loading = false;
+      Swal.fire({
+        icon: 'error',
+        title: 'Booking Failed',
+        text: '❌ Failed to confirm booking. Please try again.',
+      });
+    },
+  });
+}
+
 
   updateSteps(activeStep: number) {
     this.steps = this.steps.map(step => {
