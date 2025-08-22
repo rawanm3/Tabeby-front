@@ -137,7 +137,7 @@
             <label for="name">Full Name</label>
             <input id="name" type="text" class="form-control" formControlName="name"
               placeholder="Enter your full name" />
-            <div *ngIf="bookingForm.get('name')?.invalid && bookingForm.get('name')?.touched" class="error">
+            <div *ngIf="bookingForm.get('name')?.invalid && bookingForm.get('name')?.dirty" class="error">
               Name is required (at least 3 characters)
             </div>
           </div>

@@ -12,6 +12,7 @@ import { authGuard } from './guards/auth.guard';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { DoctorComponent } from './pages/doctor/doctor.component';
 import { DoctorAppointmentComponent } from './components/doctor-appointment/doctor-appointment.component';
+import { PatientComponent } from './pages/patient/patient.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/contact-us', pathMatch: 'full' },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent , canActivate: [authGuard]},
   { path: 'doctor', component: DoctorComponent, canActivate: [authGuard] },
   { path: 'doctors', component: DoctorAppointmentComponent },
+  {path : 'patient', component:PatientComponent  },
   { path: '**', redirectTo: '/contact-us' }
 ];
 

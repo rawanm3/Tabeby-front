@@ -1,0 +1,50 @@
+<div class="user-management">
+  <h2>User Management</h2>
+
+  <div class="filters">
+    <label for="role">Filter by Role:</label>
+    <select id="role" [(ngModel)]="selectedRole" (change)="fetchUsers()">
+      <option value="">All</option>
+      <option value="doctor">Doctor</option>
+      <option value="nurse">Nurse</option>
+      <option value="patient">Patient</option>
+    </select>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading...</div>
+
+  <table *ngIf="!loading && users.length > 0" class="users-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Verified</th>
+        <th>Active</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <span [class.verified]="user.isVerified">{{ user.isVerified ? "Yes" : "No" }}</span>
+        </td>
+        <td>
+          <button (click)="toggleActivation(user)" [ngClass]="{'active': user.isActive, 'inactive': !user.isActive}">
+            {{ user.isActive ? "Deactivate" : "Activate" }}
+          </button>
+        </td>
+        <td>
+          <button class="delete" (click)="deleteUser(user._id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && users.length === 0" class="empty">
+    No users found.
+  </div>
+</div>

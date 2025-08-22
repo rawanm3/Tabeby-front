@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'; // Import Router
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { ReviewService, TopRated } from 'src/app/services/review.service';
@@ -16,8 +16,11 @@ export class ContactUsComponent implements OnInit {
   activeTab: 'doctors' | 'nurses' = 'doctors';
     topDoctors: TopRated[] = [];
   topNurses: TopRated[] = [];
-
-  constructor(private authService: AuthService,private specialtyService: SpecialtyService,private reviewService: ReviewService) {}
+  gopatient() {
+    this.router.navigate(['/patient']);
+  }
+  
+  constructor(private authService: AuthService,private specialtyService: SpecialtyService,private reviewService: ReviewService,private router:Router ) {}
   
 
   loadSpecialties(type: 'doctors' | 'nurses') {
@@ -51,7 +54,7 @@ export class ContactUsComponent implements OnInit {
 
 
   ngOnInit(): void {
-        this.loadTopDoctors();
+    this.loadTopDoctors();
     this.loadTopNurses();
     this.loadSpecialties('doctors');
     this.authService.currentUser$.subscribe((u) => {

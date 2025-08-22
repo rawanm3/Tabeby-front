@@ -108,9 +108,9 @@ export class RegisterComponent implements OnInit {
   // Validators
   private passwordValidator(control: AbstractControl): {[key: string]: any} | null {
     const value = control.value;
-    if (!value) return null;
-
-    const hasNumber = /[0-9]/.test(value);
+    if (!value) return null; 
+    
+    const hasNumber = /[0-9]/.test(value); 
     const hasUpper = /[A-Z]/.test(value);
     const hasLower = /[a-z]/.test(value);
     const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(value);

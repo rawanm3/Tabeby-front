@@ -1,0 +1,71 @@
+.user-management {
+  padding: 20px;
+
+  h2 {
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .filters {
+    margin-bottom: 15px;
+
+    select {
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+  }
+
+  .loading {
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+  }
+
+  .users-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background: #f4f4f4;
+    }
+
+    .verified {
+      color: green;
+      font-weight: bold;
+    }
+
+    button {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &.active {
+        background: #ffc107;
+        color: #000;
+      }
+
+      &.inactive {
+        background: #28a745;
+        color: #fff;
+      }
+
+      &.delete {
+        background: #dc3545;
+        color: #fff;
+      }
+    }
+  }
+
+  .empty {
+    text-align: center;
+    color: #888;
+  }
+}
