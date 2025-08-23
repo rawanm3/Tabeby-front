@@ -13,6 +13,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { DoctorComponent } from './pages/doctor/doctor.component';
 import { DoctorAppointmentComponent } from './components/doctor-appointment/doctor-appointment.component';
 import { PatientComponent } from './pages/patient/patient.component';
+import { AdminComponent } from './components/admin/admin.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/contact-us', pathMatch: 'full' },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'doctor', component: DoctorComponent, canActivate: [authGuard] },
   { path: 'doctors', component: DoctorAppointmentComponent },
   {path : 'patient', component:PatientComponent  },
+  {path : 'admin', component:AdminComponent  },
   { path: '**', redirectTo: '/contact-us' }
 ];
 

@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private initializeForm(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['',  [Validators.required, Validators.minLength(8), this.passwordValidator]],
+      password: ['',  [Validators.required, Validators.minLength(7)]],
       rememberMe: [false]
     });
   }
@@ -46,11 +46,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (!value) return null;
   
       const hasNumber = /[0-9]/.test(value);
-      const hasUpper = /[A-Z]/.test(value);
-      const hasLower = /[a-z]/.test(value);
-      const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+      // const hasUpper = /[A-Z]/.test(value);
+      // const hasLower = /[a-z]/.test(value);
+      // const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(value);
   
-      const valid = hasNumber && hasUpper && hasLower && hasSpecial;
+      const valid = hasNumber ;
       return valid ? null : { passwordStrength: true };
     }
   
