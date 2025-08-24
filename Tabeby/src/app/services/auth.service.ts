@@ -121,12 +121,18 @@ export class AuthService {
   resendOtp(email: string) {
   return this.http.post(`${this.baseUrl}/resend-otp`, { email });
  }
- resetPassword(data: { email: string; newPassword: string }) {
+resetPassword(data: { email: string; newPassword: string }) {
   return this.http.post(`${this.baseUrl}/reset-password`, data);
 }
+
+
 
 forgotPassword(data: { email: string }) {
   return this.http.post(`${this.baseUrl}/forgot-password`, data);
 }
+verifyOtpReset(data: { email: string; otp: string }) {
+  return this.http.post(`${this.baseUrl}/verify-otp-reset`, data);
+}
+
 
 }

@@ -22,17 +22,25 @@ export interface TopRated {
   providedIn: 'root'
 })
 export class ReviewService {
-private apiUrl = 'http://localhost:3000/reviews'; // ✅ غيّريها حسب الباك بتاعك
+private apiUrl = 'http://localhost:3000/doctors'; // ✅ غيّريها حسب الباك بتاعك
 
   constructor(private http: HttpClient) {}
 
   // 🟢 Get Top Doctors
-  getTopDoctors(): Observable<TopRated[]> {
-    return this.http.get<TopRated[]>(`${this.apiUrl}/top-doctors`);
+  // getTopDoctors(): Observable<TopRated[]> {
+  //   return this.http.get<TopRated[]>(`${this.apiUrl}/top-doctors`);
+  // }
+
+  // // 🟢 Get Top Nurses
+  // getTopNurses(): Observable<TopRated[]> {
+  //   return this.http.get<TopRated[]>(`${this.apiUrl}/top-nurses`);
+  // }
+
+   getAllDoctors(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
   }
 
-  // 🟢 Get Top Nurses
-  getTopNurses(): Observable<TopRated[]> {
-    return this.http.get<TopRated[]>(`${this.apiUrl}/top-nurses`);
+  getDoctorById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 }

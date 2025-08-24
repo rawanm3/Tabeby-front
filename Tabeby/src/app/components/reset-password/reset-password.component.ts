@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent {
-  resetForm: FormGroup;
+   resetForm: FormGroup;
   isLoading = false;
   errorMessage = '';
   successMessage = '';
@@ -28,25 +28,35 @@ export class ResetPasswordComponent {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.email = params['email'] || '';
+      this.email = params['email'] || sessionStorage.getItem('pendingEmail') || '';
+      if (!this.email) {
+        // لو مفيش ايميل → رجعه للـ forgot-password
+        this.router.navigate(['/forgot-password']);
+      }
     });
   }
+
   onSubmit(): void {
     if (this.resetForm.invalid) return;
+
     this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
     this.authService.resetPassword({
       email: this.email,
       newPassword: this.resetForm.value.newPassword
     }).subscribe({
       next: () => {
         this.isLoading = false;
-        this.successMessage = 'Password reset successfully!';
+        this.successMessage = 'تم تغيير كلمة المرور بنجاح 🎉';
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
       error: err => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Reset failed';
+        this.errorMessage = err.error?.message || 'فشل تغيير كلمة المرور';
       }
     });
   }
 }
+

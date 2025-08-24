@@ -35,6 +35,7 @@ import { DoctorAppointmentComponent } from './components/doctor-appointment/doct
 import { DoctorCardComponent } from './components/doctor-card/doctor-card.component';
 import { ChooseSlotComponent } from './components/choose-slot/choose-slot.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { VerifyOtpResetComponent } from './components/verify-otp-reset/verify-otp-reset.component';
 
 @NgModule({
    declarations: [
@@ -61,6 +62,7 @@ DoctorBookingComponent,
     DoctorCardComponent,
     ChooseSlotComponent,
     AdminComponent,
+    VerifyOtpResetComponent,
   ],
   imports: [
     BrowserModule,

@@ -24,6 +24,7 @@ export class AdminComponent implements OnInit{
     status: 'approved',
     rejectionReason: ''
   };
+  router: any;
 
   constructor(private dashboardService: DashboardService , private authService:AuthService) {}
 
@@ -34,6 +35,7 @@ export class AdminComponent implements OnInit{
   
   logout() {
     this.authService.logout();
+     this.router.navigate(['/contact-us']);
   }
 
   fetchUsers() {

@@ -35,27 +35,33 @@ export class ContactUsComponent implements OnInit {
 }
 
 
+doctors: any[] = [];
 
 
 
-  loadTopDoctors() {
-    this.reviewService.getTopDoctors().subscribe(data => {
-      console.log('Top Doctors:', data); // ✅ شوفي هنا البيانات راجعة ولا لأ
-      this.topDoctors = data;
-    });
-  }
 
-  loadTopNurses() {
-    this.reviewService.getTopNurses().subscribe(data => {
-      console.log('Top Nurses:', data); // ✅ شوفي هنا البيانات راجعة ولا لأ
-      this.topNurses = data;
-    });
-  }
+  // loadTopDoctors() {
+  //   this.reviewService.getTopDoctors().subscribe(data => {
+  //     console.log('Top Doctors:', data); // ✅ شوفي هنا البيانات راجعة ولا لأ
+  //     this.topDoctors = data;
+  //   });
+  // }
+
+  // loadTopNurses() {
+  //   this.reviewService.getTopNurses().subscribe(data => {
+  //     console.log('Top Nurses:', data); // ✅ شوفي هنا البيانات راجعة ولا لأ
+  //     this.topNurses = data;
+  //   });
+  // }
 
 
   ngOnInit(): void {
-    this.loadTopDoctors();
-    this.loadTopNurses();
+    // this.loadTopDoctors();
+    // this.loadTopNurses();
+     this.reviewService.getAllDoctors().subscribe((data) => {
+      console.log("Doctors:", data);
+      this.doctors = data;
+    });
     this.loadSpecialties('doctors');
     this.authService.currentUser$.subscribe((u) => {
       this.user = u;

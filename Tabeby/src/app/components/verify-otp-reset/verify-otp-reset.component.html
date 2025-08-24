@@ -1,0 +1,32 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>تأكيد رمز OTP</h2>
+    <p>أدخل الرمز اللي بعتناه على <strong>{{email}}</strong></p>
+
+    <form [formGroup]="verifyForm" (ngSubmit)="onVerify()">
+      <div class="input-field">
+        <label for="otp">رمز OTP</label>
+        <input 
+          id="otp"
+          type="text" 
+          formControlName="otp"
+          placeholder="أدخل الكود"
+        />
+        <div *ngIf="verifyForm.get('otp')?.invalid && verifyForm.get('otp')?.touched" class="validation-error">
+          <small *ngIf="verifyForm.get('otp')?.errors?.['required']">الرمز مطلوب</small>
+          <small *ngIf="verifyForm.get('otp')?.errors?.['minlength']">الرمز قصير جدا</small>
+          <small *ngIf="verifyForm.get('otp')?.errors?.['maxlength']">الرمز طويل جدا</small>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="verifyForm.invalid || isLoading">
+        {{ isLoading ? 'جارٍ التحقق...' : 'تحقق' }}
+      </button>
+    </form>
+
+    <div *ngIf="errorMessage" class="auth-error">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="auth-success">{{ successMessage }}</div>
+
+    <button  [disabled]="isLoading">إعادة إرسال الرمز</button>
+  </div>
+</div>
