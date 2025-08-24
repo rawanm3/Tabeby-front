@@ -1,0 +1,646 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Tajawal", sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.booking-container {
+    display: flex;
+    margin-top: 30px;
+    gap: 30px;
+}
+
+.doctor-profile {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    text-align: center;
+}
+
+.doctor-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #1a73e8;
+    margin-bottom: 20px;
+}
+
+.doctor-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a73e8;
+    margin-bottom: 10px;
+}
+
+.doctor-specialty {
+    color: #6c14d0;
+    font-weight: 500;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.doctor-rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.stars {
+    color: #ffc107;
+    margin-left: 5px;
+}
+
+.doctor-description {
+    font-size: 0.95rem;
+    color: #555;
+    margin: 10px 0 20px 0;
+    line-height: 1.5;
+}
+
+.rating-value {
+    font-weight: 700;
+    color: #333;
+}
+
+.doctor-info {
+    text-align: right;
+    margin: 20px 0;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.info-value {
+    color: #333;
+    font-weight: 700;
+}
+
+.read-more-btn {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    padding: 0;
+}
+
+.read-more-btn:hover {
+    text-decoration: underline;
+}
+
+.booking-section {
+    flex: 2;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+}
+
+.section-title {
+    font-size: 22px;
+    color: #1a73e8;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+    font-weight: 700;
+}
+
+.calendar-container {
+    margin-bottom: 30px;
+}
+
+.month-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.month-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+}
+
+.nav-btn {
+  display: block;
+  margin: 15px auto; /* في الوسط أسفل الأيام */
+  padding: 10px 25px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 25px; /* pill shape */
+  border: 2px solid #1a73e8;
+  background-color: #fff;
+  color: #1a73e8;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.nav-btn:hover {
+  background-color: #1a73e8;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+}
+
+.nav-btn:focus {
+  outline: none;
+}
+
+.week-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.week-day {
+    text-align: center;
+    font-weight: 700;
+    color: #666;
+    padding: 10px;
+}
+
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.day {
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.day:hover {
+    background: #f0f5ff;
+}
+
+.day.available {
+    background: #e6f7ee;
+    color: #00a85b;
+    font-weight: 500;
+}
+
+.day.selected {
+    background: #1a73e8;
+    color: white;
+    font-weight: 700;
+}
+
+.day.unavailable {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.time-slot {
+    padding: 12px;
+    text-align: center;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.time-slot:hover {
+    border-color: #1a73e8;
+    background: #f0f5ff;
+}
+
+.time-slot.selected {
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+}
+
+.time-slot.unavailable {
+    color: #ccc;
+    cursor: not-allowed;
+    border-color: #f0f0f0;
+}
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.time-slot {
+    padding: 12px;
+    text-align: center;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.time-slot:hover {
+    border-color: #1a73e8;
+    background: #f0f5ff;
+}
+
+.time-slot.selected {
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+}
+
+.patient-form {
+    margin-top: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #1a73e8;
+    outline: none;
+}
+
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  background-color: #1a73e8;
+  transition: all 0.3s ease;
+  text-align: center;
+
+  &:hover:enabled {
+    background-color: #0d5bba;
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.booking-summary {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 25px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-label {
+    color: #666;
+}
+
+.summary-value {
+    font-weight: 700;
+    color: #333;
+}
+
+.total-price {
+    font-size: 20px;
+    color: #1a73e8;
+}
+
+.steps-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.steps-indicator::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #f0f0f0;
+    z-index: 1;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    color: #999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-number {
+    background: #1a73e8;
+    color: white;
+}
+
+.step.completed .step-number {
+    background: #00a85b;
+    color: white;
+}
+
+.step-text {
+    font-size: 14px;
+    color: #999;
+    font-weight: 500;
+}
+
+.step.active .step-text {
+    color: #1a73e8;
+}
+
+.step.completed .step-text {
+    color: #00a85b;
+}
+
+.confirmation {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.confirmation i {
+    font-size: 80px;
+    color: #00a85b;
+    margin-bottom: 20px;
+}
+
+.confirmation h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.confirmation p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+
+@media (max-width: 992px) {
+    .booking-container {
+        flex-direction: column;
+    }
+
+    .days-grid,
+    .week-days {
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    .day {
+        padding: 8px 5px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .days-grid,
+    .week-days {
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    .day {
+        padding: 6px 3px;
+        font-size: 12px;
+    }
+
+    .time-slots {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    nav ul {
+        display: none;
+    }
+}
+
+/* Steps */
+.steps-indicator {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 15px;
+    transition: all 0.3s ease;
+    /* smooth */
+}
+
+.step-number {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.step-text {
+    font-size: 14px;
+}
+
+.step.active .step-number {
+    background: #007bff;
+    color: #fff;
+    transform: scale(1.2);
+}
+
+.step.completed .step-number {
+    background: #28a745;
+    color: #fff;
+}
+
+/* Reviews */
+.reviews-section {
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.reviews-title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.reviews-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.review-card {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px 20px;
+    text-align: left;
+    transition: transform 0.2s;
+}
+
+.review-card:hover {
+    transform: translateY(-3px);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.review-author {
+    font-weight: bold;
+    color: #222;
+}
+
+.review-rating .star {
+    color: #ccc;
+    font-size: 1rem;
+}
+
+.review-rating .star.filled {
+    color: #f5c518;
+}
+
+.review-text {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.4;
+}
+
+.review-date {
+    font-size: 0.85rem;
+    color: #999;
+}
+.error{
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+.doctor-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+
+  .average-rating {
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .stars {
+    color: #ffb400;
+    font-size: 16px;
+  }
+
+  .reviews-count {
+    color: #666;
+    font-size: 14px;
+  }
+}

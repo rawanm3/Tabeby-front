@@ -1,0 +1,636 @@
+
+  <!-- Top Info Bar -->
+  <div class="top-bar text-white py-2 px-2">
+    <div class= "mx-3 d-flex justify-content-between small">
+      <div class="d-flex align-items-center my-2">
+        <h3 class="box"><i class="fa-regular fa-clock"></i> Working Hour: <p>  08:00am to 09:00pm </p> </h3>
+        <span class="ms-3 box2"><i class="fa-solid fa-envelope"></i> tabeby.notification@gmail.com</span>
+      </div>
+      <div class="d-flex align-items-center my-2">
+        
+        <div class="d-flex align-items-center " >
+            <h3 class="box">
+                Contact: <p> +123 (456) 789</p>
+            </h3>
+         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 ">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">Dispensary</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto me-3">
+          <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+        </ul>
+        <button href="#" class="btn btn-primary">Book Appointment</button>
+      </div>
+    </div>
+  </nav> -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-3 ">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand fw-bold" href="#">Dispensary</a>
+
+    <!-- Toggle button for mobile -->
+    <a class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </a>
+
+    <!-- Menu -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center ">
+<!-- الحالة لو مفيش user -->
+<ng-template #guest>
+  <li class="nav-item">
+    <a routerLink="/register" class="btn-outline-primary btn">Sign Up</a>
+  </li>
+  <li class="nav-item">
+    <a routerLink="/login">Login</a>
+  </li>
+</ng-template>
+
+<!-- الحالة لو فيه user -->
+<ng-container *ngIf="user; else guest">
+  <li class="nav-item">
+    <span class="me-3" (click)="gopatient()">👋 أهلاً {{ user.name }}</span>
+  </li>
+  <li class="nav-item">
+    <button class="btn btn-danger" (click)="logout()">Logout</button>
+  </li>
+</ng-container>
+
+
+
+        <!-- Contact Us -->
+        <li class="nav-item">
+          <a href="#" class="">Contact Us</a>
+        </li>
+
+        <!-- Language Switch -->
+        <li class="nav-item">
+          <a id="langBtn" class="  "><i class="fa-solid fa-globe"></i>Arabic</a>
+        </li>
+
+        <!-- Light/Dark Mode -->
+        <div>
+           <input type="checkbox" class="checkbox" id="checkbox">
+           <label for="checkbox" class="checkbox-label">
+             <i class="fa-regular fa-moon"></i>
+             <i class="fa-regular fa-sun"></i>
+             <span class="ball"></span>
+           </label>
+        </div>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section ">
+    <div class="container">
+      <div class="row align-items-center">
+        <!-- Left Text -->
+        <div class="col-lg-6">
+          <small class="text-primary fw-bold"><i class="fa-solid fa-stethoscope"></i> Your Health Our Priority</small>
+          <h1 class="display-5 fw-bold mt-2">Expert medical care <br> you can rely on</h1>
+          <p class="mt-3 text-muted">Experience healthcare you can trust. Our dedicated team provides compassionate, high-quality care.</p>
+          <div class="mt-4">
+            <button href="#" class="btn btn-primary me-2" routerLink="/"  >Book Appointment</button>
+            <a href="#" class="btn btn-outline-primary">Talk with a doctor</a>
+          </div>
+          <div class="mt-4 d-flex align-items-center">
+            <img src="https://via.placeholder.com/40" class="rounded-circle me-1" alt="">
+            <img src="https://via.placeholder.com/40" class="rounded-circle me-1" alt="">
+            <img src="https://via.placeholder.com/40" class="rounded-circle me-1" alt="">
+            <span class="ms-2 text-muted">2500+ Happy Patients</span>
+          </div>
+        </div>
+        <!-- Right Image -->
+        <div class="col-lg-6 text-center mt-4 mt-lg-0 img-bg">
+          <img src="../../../assets/images/hero-img.png" class="img-fluid rounded" alt="Doctor">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- search section -->
+    
+   <section class="search-section mb-5">
+    <div class="search-card">
+        <div class="search-tabs">
+            <a class="tab active"
+            [class.active]="activeTab === 'doctors'" 
+            (click)="loadSpecialties('doctors')" 
+            data-tab="doctors">Doctors</a>
+            <a class="tab " data-tab="doctors"
+            [class.active]="activeTab === 'nurses'" 
+            (click)="loadSpecialties('nurses')">Nurses</a>
+        </div>
+                    
+        <div class="search-form">
+            <div class="search-row">
+                <div class="search-field">
+                    <i class="fas fa-stethoscope"></i>
+                    <select id="specialty">
+                        <option *ngFor="let spec of specialties" [value]="spec">{{ spec }}</option>
+                        <!-- <option value="">Select Specialty</option>
+                        <option value="cardiology">Cardiology</option>
+                        <option value="dermatology">Dermatology</option>
+                        <option value="neurology">Neurology</option>
+                        <option value="pediatrics">Pediatrics</option>
+                        <option value="orthopedics">Orthopedics</option> -->
+                    </select>
+                </div>
+                            
+                <div class="search-field">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" placeholder="Location" id="location">
+                </div>
+                            
+                <div class="search-field">
+                    <i class="fas fa-user-md"></i>
+                    <input type="text" placeholder="Doctor's Name" id="doctor-name">
+                </div>
+                            
+                <button class="search-btn" routerLink="/doctors">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+            </div>
+        </div>
+    </div>
+   </section>
+
+    <!-- Specialists Section -->
+    <section class="specialists-section">
+        <div class="container">
+            <div class="section-header">
+                
+                <h2>Find the Right Doctor</h2>
+                <p class="text-muted">Book appointments with top-rated specialists in various medical fields</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="doctor-card">
+                        <div class="doctor-img">
+                            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Doctor">
+                        </div>
+                        <div class="doctor-info" *ngFor="let doctor of topDoctors">
+                            <h5>{{ doctor.user.fullName }}</h5>
+                            <p class="specialty"> {{ doctor.specialty }}</p>
+                            <p class="hospital">Cairo Medical Center</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span class="ms-1">4.7</span>
+                            </div>
+                            <p>Avg Rating: {{ doctor.avgRating | number:'1.1-1' }}</p>
+                            <p>Total Reviews: {{ doctor.totalReviews }}</p>
+                            <button href="#" class="btn btn-sm btn-primary w-100">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="doctor-card">
+                        <div class="doctor-img">
+                            <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1528&q=80" alt="Doctor">
+                        </div>
+                        <div class="doctor-info">
+                            <h5>Dr. Ahmed Mohamed</h5>
+                            <p class="specialty">Neurologist</p>
+                            <p class="hospital">Alexandria Hospital</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="ms-1">4.2</span>
+                            </div>
+                            <button href="#" class="btn btn-sm btn-primary w-100">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="doctor-card">
+                        <div class="doctor-img">
+                            <img src="https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Doctor">
+                        </div>
+                        <div class="doctor-info">
+                            <h5>Dr. Michael Brown</h5>
+                            <p class="specialty">Pediatrician</p>
+                            <p class="hospital">Children's Health Center</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-1">5.0</span>
+                            </div>
+                            <button href="#" class="btn btn-sm btn-primary w-100">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="doctor-card">
+                        <div class="doctor-img">
+                            <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Doctor">
+                        </div>
+                        <div class="doctor-info">
+                            <h5>Dr. Lisa Williams</h5>
+                            <p class="specialty">Dermatologist</p>
+                            <p class="hospital">Skin Care Clinic</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span class="ms-1">4.8</span>
+                            </div>
+                            <button href="#" class="btn btn-sm btn-primary w-100">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-outline-primary">View All Doctors</a>
+            </div>
+        </div>
+    </section>
+
+   <!-- Services Section -->
+   <section class="services-section py-5 ">
+    <div class="container">
+      <div class="row align-items-center">
+        <!-- Left Text -->
+        <div class="col-lg-6">
+          <small class="text-primary fw-bold">About Us</small>
+          <h2 class="fw-bold mt-2">Professionals dedicated <br> to your health</h2>
+          <p class="text-muted mt-3">We offer a wide range of healthcare services to ensure your well-being.</p>
+          <ul class="list-unstyled mt-4">
+            <li class="mb-3"><i class="fa-solid fa-check text-primary me-2"></i>Patient-Centered Care</li>
+            <li class="mb-3"><i class="fa-solid fa-check text-primary me-2"></i>Specialist Doctors</li>
+            <li class="mb-3"><i class="fa-solid fa-check text-primary me-2"></i>24 Hours Service</li>
+          </ul>
+        </div>
+        <!-- Right Image with Overlay -->
+        <div class="col-lg-6 position-relative mt-4 mt-lg-0">
+          <img src="https://via.placeholder.com/500x350" class="img-fluid rounded" alt="Nurse and Patient">
+          <a href="#" class="btn btn-primary position-absolute top-50 start-50 translate-middle">
+            <i class="fa-solid fa-video"></i> Video Call Support
+          </a>
+          <div class="opening-hours p-3 bg-primary text-white rounded position-absolute bottom-0 end-0">
+            <h6>Opening Hours</h6>
+            <p class="mb-0">Mon - Fri: 8am - 8pm</p>
+            <p class="mb-0">Sat - Sun: 9am - 6pm</p>
+          </div>
+        </div>
+      </div>
+    </div>
+   </section>
+
+
+    <!-- Book by Specialty Section -->
+    <section class="specialty-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Book by Specialty</h2>
+                <p>Find and book appointments with specialists in various medical fields</p>
+            </div>
+            
+            <div class="specialty-grid">
+                <div class="specialty-card">
+                    <div class="specialty-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h4>Cardiology</h4>
+                    <p>Heart and cardiovascular system specialists</p>
+                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="specialty-card">
+                    <div class="specialty-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4>Neurology</h4>
+                    <p>Specialists in brain and nervous system</p>
+                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="specialty-card">
+                    <div class="specialty-icon">
+                        <i class="fas fa-bone"></i>
+                    </div>
+                    <h4>Orthopedics</h4>
+                    <p>Bones, joints and musculoskeletal system</p>
+                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="specialty-card">
+                    <div class="specialty-icon">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <h4>Pediatrics</h4>
+                    <p>Child healthcare specialists</p>
+                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="specialty-card">
+                    <div class="specialty-icon">
+                        <i class="fas fa-allergies"></i>
+                    </div>
+                    <h4>Dermatology</h4>
+                    <p>Skin, hair and nail specialists</p>
+                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="specialty-card">
+                    <div class="specialty-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h4>Ophthalmology</h4>
+                    <p>Eye care and vision specialists</p>
+                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="specialty-card">
+                    <div class="specialty-icon">
+                        <i class="fas fa-tooth"></i>
+                    </div>
+                    <h4>Dentistry</h4>
+                    <p>Oral health and dental care specialists</p>
+                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="specialty-card">
+                    <div class="specialty-icon">
+                        <i class="fas fa-procedures"></i>
+                    </div>
+                    <h4>General Surgery</h4>
+                    <p>Surgical procedure specialists</p>
+                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-outline-primary">View All Specialties</a>
+            </div>
+        </div>
+    </section>
+
+
+        <!-- Nurse Booking Section -->
+    <section class="nurse-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Professional Nursing Care at Home</h2>
+                <p>Book qualified nurses for home visits, post-operative care, elderly care, and more</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="nurse-card">
+                        <div class="nurse-img">
+                            <img src="https://images.unsplash.com/photo-1551190822-a9333d879b1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Nurse">
+                            
+                        </div>
+                        <div class="nurse-info">
+                            <h5>Nurse Fatma Hassan</h5>
+                            <p class="experience">5 years experience</p>
+                            <p class="services">Elderly Care, Post-Op Care</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span class="ms-1">4.6</span>
+                            </div>
+                            <button href="#" class="btn btn-sm btn-primary w-100">Book Nurse</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="nurse-card">
+                        <div class="nurse-img">
+                            <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1528&q=80" alt="Nurse">
+                            
+                        </div>
+                        <div class="nurse-info">
+                            <h5>Nurse Amina Mahmoud</h5>
+                            <p class="experience">7 years experience</p>
+                            <p class="services">Pediatric Care, Newborn Care</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-1">5.0</span>
+                            </div>
+                            <button href="#" class="btn btn-sm btn-primary w-100">Book Nurse</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="nurse-card">
+                        <div class="nurse-img">
+                            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Nurse">
+                            
+                        </div>
+                        <div class="nurse-info">
+                            <h5>Nurse Youssef Ali</h5>
+                            <p class="experience">4 years experience</p>
+                            <p class="services">Post-Surgical Care, Wound Care</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="ms-1">4.1</span>
+                            </div>
+                            <button href="#" class="btn btn-sm btn-primary w-100">Book Nurse</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="nurse-card">
+                        <div class="nurse-img">
+                            <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Nurse">
+                        </div>
+                        <div class="nurse-info">
+                            <h5>Nurse Mariam Adel</h5>
+                            <p class="experience">8 years experience</p>
+                            <p class="services">Chronic Disease Management</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span class="ms-1">4.7</span>
+                            </div>
+                            <button href="#" class="btn btn-sm btn-primary w-100">Book Nurse</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-outline-primary">View All Nurses</a>
+            </div>
+        </div>
+    </section>
+
+        <!-- All Your Needs on Tabeby Section -->
+    <section class="needs-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>All Your Healthcare Needs on Tabeby</h2>
+                <p>Search and book appointments with doctors at clinics, hospitals, home visits, or via call. You can also order medicines or book services at the best prices.</p>
+            </div>
+            
+            <div class="needs-features">
+                <div class="needs-feature">
+                    <div class="needs-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Real Patient Reviews</h3>
+                    <p>Doctor reviews from real patients who booked through Tabeby and actually visited the doctor.</p>
+                </div>
+                
+                <div class="needs-feature">
+                    <div class="needs-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Your Booking is Confirmed</h3>
+                    <p>Your appointment is confirmed as soon as you choose from the doctor's available time slots.</p>
+                </div>
+                
+                <div class="needs-feature">
+                    <div class="needs-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3>Book Free, Pay at Clinic</h3>
+                    <p>The consultation price on Tabeby is the same as at the clinic, without any additional fees.</p>
+                </div>
+                
+                <div class="needs-feature">
+                    <div class="needs-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>Home Nursing Services</h3>
+                    <p>Our unique service brings professional nursing care right to your doorstep when you need it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h4>Qualified Doctors</h4>
+                        <p>Book appointments with certified specialists in various medical fields.</p>
+                        <a href="#" class="text-primary text-decoration-none">Find Doctors <i class="fas fa-arrow-right ms-2"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-procedures"></i>
+                        </div>
+                        <h4>Nurse at Home</h4>
+                        <p>Our unique service brings professional nursing care to your doorstep.</p>
+                        <a href="#" class="text-primary text-decoration-none">Book a Nurse <i class="fas fa-arrow-right ms-2"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <h4>Online Consultation</h4>
+                        <p>Connect with doctors via video call from the comfort of your home.</p>
+                        <a href="#" class="text-primary text-decoration-none">Start Consultation <i class="fas fa-arrow-right ms-2"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+      <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Tabeby</h4>
+                    <p>Find the best doctors and book appointments easily with Egypt's leading healthcare platform.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#doctors">Find Doctors</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to get updates on new doctors and features</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Tabeby. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>

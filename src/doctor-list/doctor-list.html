@@ -1,0 +1,33 @@
+<div class="container mt-4">
+  <h3>Find Your Doctor</h3>
+
+  <!-- Filters -->
+  <div class="filters mb-3">
+    <input type="text" class="form-control mb-2" placeholder="Search by name" [(ngModel)]="searchName">
+
+    <select class="form-control mb-2" [(ngModel)]="selectedSpecialty">
+      <option value="">All Specialties</option>
+      <option>Cardiologist</option>
+      <option>Dentist</option>
+      <option>Dermatologist</option>
+    </select>
+
+    <select class="form-control mb-2" [(ngModel)]="selectedCity">
+      <option value="">All Cities</option>
+      <option>Cairo</option>
+      <option>Alexandria</option>
+      <option>Giza</option>
+    </select>
+
+    <input type="number" class="form-control mb-2" placeholder="Max Price" [(ngModel)]="maxPrice">
+  </div>
+
+  <!-- Doctors List -->
+  <div *ngFor="let doc of doctors | doctorFilter: searchName : selectedSpecialty : selectedCity : maxPrice">
+    <div class="card p-3 mb-2 shadow-sm">
+      <h5>{{ doc.name }}</h5>
+      <p>{{ doc.specialty }} - {{ doc.city }}</p>
+      <p><b>{{ doc.price }} EGP</b></p>
+    </div>
+  </div>
+</div>

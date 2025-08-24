@@ -1,0 +1,153 @@
+<div class="profile">
+    <header class="header">
+        <img [src]="patient.photoUrl" alt="Patient Photo" class="photo" />
+        <div class="meta">
+            <h2>مريض <span class="name">{{ patient.name }}</span></h2>
+            <p class="title">{{ patient.age }} سنة</p>
+            
+            <div class="health-info">
+                <i class="fas fa-heartbeat"></i>
+                <span>فصيلة الدم: {{ patient.bloodType }}</span>
+            </div>
+            
+            <div class="contact-info">
+                <i class="fas fa-phone"></i>
+                <span>{{ patient.phone }}</span>
+            </div>
+        </div>
+
+    </header>
+
+    <nav class="tabs">
+        <button [class.active]="activeTab==='info'" (click)="activeTab='info'">المعلومات الشخصية</button>
+        <button [class.active]="activeTab==='medical'" (click)="activeTab='medical'">السجل الطبي</button>
+        <button [class.active]="activeTab==='medications'" (click)="activeTab='medications'">الأدوية</button>
+        <button [class.active]="activeTab==='emergency'" (click)="activeTab='emergency'">معلومات الطوارئ</button>
+    </nav>
+
+    <section class="tab-content" *ngIf="activeTab==='info'">
+        <h3>المعلومات الأساسية</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="label">الاسم الكامل:</span>
+                <span class="value">{{ patient.fullName }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">العمر:</span>
+                <span class="value">{{ patient.age }} سنة</span>
+            </div>
+            <div class="info-item">
+                <span class="label">الجنس:</span>
+                <span class="value">{{ patient.gender }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">فصيلة الدم:</span>
+                <span class="value">{{ patient.bloodType }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">رقم الهاتف:</span>
+                <span class="value">{{ patient.phone }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">البريد الإلكتروني:</span>
+                <span class="value">{{ patient.email }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">العنوان:</span>
+                <span class="value">{{ patient.address }}</span>
+            </div>
+        </div>
+        
+        <h3>معلومات الاتصال في حالات الطوارئ</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="label">اسم الشخص:</span>
+                <span class="value">{{ patient.emergencyContact.name }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">العلاقة:</span>
+                <span class="value">{{ patient.emergencyContact.relation }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">رقم الهاتف:</span>
+                <span class="value">{{ patient.emergencyContact.phone }}</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="tab-content" *ngIf="activeTab==='medical'">
+        <h3>الحالات المرضية</h3>
+        <ul class="medical-list">
+            <li *ngFor="let condition of patient.medicalConditions">
+                <i class="fas fa-stethoscope"></i> {{ condition }}
+            </li>
+        </ul>
+        
+        <h3>الحساسيات</h3>
+        <ul class="medical-list">
+            <li *ngFor="let allergy of patient.allergies">
+                <i class="fas fa-allergies"></i> {{ allergy }}
+            </li>
+        </ul>
+        
+        <h3>التاريخ الجراحي</h3>
+        <ul class="medical-list">
+            <li *ngFor="let surgery of patient.surgicalHistory">
+                <i class="fas fa-procedures"></i> {{ surgery }}
+            </li>
+        </ul>
+    </section>
+
+    <section class="tab-content" *ngIf="activeTab==='medications'">
+        <h3>الأدوية الحالية</h3>
+        <div class="medications-list">
+            <div class="medication-item" *ngFor="let med of patient.currentMedications">
+                <div class="med-name">{{ med.name }}</div>
+                <div class="med-details">
+                    <span class="med-dose">{{ med.dosage }}</span>
+                    <span class="med-frequency">{{ med.frequency }}</span>
+                </div>
+                <div class="med-purpose">الغرض: {{ med.purpose }}</div>
+            </div>
+        </div>
+        
+        <h3>التاريخ الدوائي</h3>
+        <div class="medications-history">
+            <div class="history-item" *ngFor="let history of patient.medicationHistory">
+                <div class="history-name">{{ history.name }}</div>
+                <div class="history-period">من {{ history.startDate }} إلى {{ history.endDate }}</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="tab-content" *ngIf="activeTab==='emergency'">
+        <h3>معلومات الطوارئ</h3>
+        <div class="emergency-card">
+            <div class="emergency-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h4>معلومات مهمة في حالات الطوارئ</h4>
+            </div>
+            <div class="emergency-content">
+                <div class="emergency-item">
+                    <span class="label">فصيلة الدم:</span>
+                    <span class="value">{{ patient.bloodType }}</span>
+                </div>
+                <div class="emergency-item">
+                    <span class="label">الحساسيات:</span>
+                    <span class="value">{{ patient.allergies.join('، ') }}</span>
+                </div>
+                <div class="emergency-item">
+                    <span class="label">الأمراض المزمنة:</span>
+                    <span class="value">{{ patient.medicalConditions.join('، ') }}</span>
+                </div>
+                <div class="emergency-item">
+                    <span class="label">الاتصال في الطوارئ:</span>
+                    <span class="value">{{ patient.emergencyContact.name }} - {{ patient.emergencyContact.phone }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <h3>تعليمات خاصة</h3>
+        <p class="special-instructions">{{ patient.specialInstructions }}</p>
+    </section>
+</div>
