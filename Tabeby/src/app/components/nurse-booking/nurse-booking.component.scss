@@ -1,122 +1,122 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Tajawal", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Tajawal", sans-serif;
 }
 
 body {
-    background-color: #f5f7fa;
-    color: #333;
-    line-height: 1.6;
+  background-color: #f5f7fa;
+  color: #333;
+  line-height: 1.6;
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .booking-container {
-    display: flex;
-    margin-top: 30px;
-    gap: 30px;
+  display: flex;
+  margin-top: 30px;
+  gap: 30px;
 }
 
-.doctor-profile {
-    flex: 1;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    padding: 25px;
-    text-align: center;
+.nurse-profile {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  padding: 25px;
+  text-align: center;
 }
 
-.doctor-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #1a73e8;
-    margin-bottom: 20px;
+.nurse-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #1a73e8;
+  margin-bottom: 20px;
 }
 
-.doctor-name {
-    font-size: 24px;
-    font-weight: 700;
-    color: #1a73e8;
-    margin-bottom: 10px;
+.nurse-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a73e8;
+  margin-bottom: 10px;
 }
 
-.doctor-specialty {
-    color: #6c14d0;
-    font-weight: 500;
-    margin-bottom: 15px;
-    font-size: 18px;
+.nurse-specialty {
+  color: #6c14d0;
+  font-weight: 500;
+  margin-bottom: 15px;
+  font-size: 18px;
 }
 
-.doctor-rating {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 15px;
+.nurse-rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
 .stars {
-    color: #ffc107;
-    margin-left: 5px;
+  color: #ffc107;
+  margin-left: 5px;
 }
 
-.doctor-description {
-    font-size: 0.95rem;
-    color: #555;
-    margin: 10px 0 20px 0;
-    line-height: 1.5;
+.nurse-description {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 10px 0 20px 0;
+  line-height: 1.5;
 }
 
 .rating-value {
-    font-weight: 700;
-    color: #333;
+  font-weight: 700;
+  color: #333;
 }
 
-.doctor-info {
-    text-align: right;
-    margin: 20px 0;
+.nurse-info {
+  text-align: right;
+  margin: 20px 0;
 }
 
 .info-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
 }
 
 .info-item:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .info-label {
-    color: #666;
-    font-weight: 500;
+  color: #666;
+  font-weight: 500;
 }
 
 .info-value {
-    color: #333;
-    font-weight: 700;
+  color: #333;
+  font-weight: 700;
 }
 
 .read-more-btn {
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-    font-size: 0.9rem;
-    margin-top: 5px;
-    padding: 0;
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  padding: 0;
 }
 
 .read-more-btn:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .booking-section {
@@ -317,74 +317,6 @@ body {
 .form-control:focus {
     border-color: #1a73e8;
     outline: none;
-}
-.review-form {
-  background: #fff;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  border: 1px solid #eee;
-}
-
-.review-form .form-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 15px;
-  color: #333;
-}
-
-.review-form .form-group {
-  margin-bottom: 15px;
-}
-
-.review-form label {
-  display: block;
-  font-weight: 500;
-  margin-bottom: 6px;
-  color: #555;
-}
-
-.review-form .form-control {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  transition: 0.3s ease;
-}
-
-.review-form .form-control:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 6px rgba(0, 123, 255, 0.2);
-}
-
-.review-form textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-.review-form .btn-submit {
-  width: 100%;
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.review-form .btn-submit:hover {
-  background: #0056b3;
-}
-
-.review-form .btn-submit:disabled {
-  background: #ccc;
-  cursor: not-allowed;
 }
 
 .btn {

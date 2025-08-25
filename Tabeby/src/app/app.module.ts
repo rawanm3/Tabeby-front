@@ -34,6 +34,7 @@ import { DoctorAppointmentComponent } from './components/doctor-appointment/doct
 import { DoctorCardComponent } from './components/doctor-card/doctor-card.component';
 import { ChooseSlotComponent } from './components/choose-slot/choose-slot.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { NurseBookingComponent } from './components/nurse-booking/nurse-booking.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { AdminComponent } from './components/admin/admin.component';
     ChooseSlotComponent,
     AdminComponent,
     LoginComponent,
+    NurseBookingComponent,
   ],
   imports: [
     BrowserModule,

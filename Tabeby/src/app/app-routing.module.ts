@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { HomeComponent } from './components/home/home.component';
 import { ContactUsComponent } from './components/contact-us/contact-us.component';
 import { VerifyOtpComponent } from './components/verify-otp/verify-otp.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
@@ -15,6 +14,7 @@ import { PatientComponent } from './pages/patient/patient.component';
 import { AdminComponent } from './components/admin/admin.component';
 
 import { authGuard } from './guards/auth.guard';
+import { DoctorBookingComponent } from './components/doctor-booking/doctor-booking.component';
 
 const routes: Routes = [
   // الصفحة الافتراضية
@@ -27,21 +27,29 @@ const routes: Routes = [
   // صفحات الدخول والتسجيل
   { path: 'login', component: LoginComponent, canActivate: [authGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [authGuard] },
-  { path: 'verify-otp', component: VerifyOtpComponent, canActivate: [authGuard] },
-  { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [authGuard] },
-  { path: 'reset-password', component: ResetPasswordComponent, canActivate: [authGuard] },
+  {path: 'verify-otp',component: VerifyOtpComponent,canActivate: [authGuard],},
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent,
+    canActivate: [authGuard],
+  },
 
   // صفحات حسب الدور
   { path: 'doctor', component: DoctorComponent, canActivate: [authGuard] },
   { path: 'patient', component: PatientComponent, canActivate: [authGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [authGuard] },
-
+  { path: 'booking/:id', component: DoctorBookingComponent },
   // أي مسار غير موجود يرجع للصفحة الرئيسية
-  { path: '**', redirectTo: '/contact-us' }
+  { path: '**', redirectTo: '/contact-us' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -3,19 +3,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { BookingService } from 'src/app/services/booking.service';
-import { jwtDecode } from 'jwt-decode';
-
 
 @Component({
-  selector: 'app-doctor-booking',
-  templateUrl: './doctor-booking.component.html',
-  styleUrls: ['./doctor-booking.component.scss'],
+  selector: 'app-nurse-booking',
+  templateUrl: './nurse-booking.component.html',
+  styleUrls: ['./nurse-booking.component.scss'],
 })
-export class DoctorBookingComponent implements OnInit {
+export class NurseBookingComponent implements OnInit {
   bookingForm!: FormGroup;
   reviewForm!: FormGroup;
-
-  doctor: any = null;
+  
+  nurse: any = null;
   steps = [
     { number: 1, text: 'Choose Date', status: 'active' },
     { number: 2, text: 'Select Time', status: 'pending' },
@@ -41,8 +39,6 @@ export class DoctorBookingComponent implements OnInit {
   showFullDescription = false;
   loading = false;
 
-  userId: string | null = null; // ✅ userId من التوكن
-
   constructor(
     private fb: FormBuilder,
     private bookingService: BookingService,
@@ -64,78 +60,50 @@ export class DoctorBookingComponent implements OnInit {
       comment: ['', [Validators.required, Validators.minLength(5)]],
     });
 
-    // ✅ فك التوكن للحصول على userId
-const token = localStorage.getItem('token');
-    if (token) {
-      const decoded: any = jwtDecode(token);
-      this.userId = decoded.id; 
+    const nurseId = this.route.snapshot.paramMap.get('id');
+    if (nurseId) {
+      this.fetchNurseData(nurseId);
+      this.loadReviews(nurseId);
+
+      this.bookingService.getAvailableDays(nurseId).subscribe({
+        next: (days) => {
+          this.availableDays = days;
+          this.firstDays = days.slice(0, 7);
+          this.remainingDays = days.slice(7);
+        }
+      });
     }
-
-    const doctorId = this.route.snapshot.paramMap.get('id');
-    if (doctorId) {
-      this.fetchDoctorData(doctorId);
-      this.loadReviews(doctorId);
-
-      // 🔹 إنشاء الأيام من اليوم لحد 21 يوم قدام
-      const today = new Date();
-      for (let i = 0; i < 21; i++) {
-        const d = new Date(today);
-        d.setDate(today.getDate() + i);
-        this.availableDays.push(this.formatDay(d));
-      }
-      this.firstDays = this.availableDays.slice(0, 7);
-      this.remainingDays = this.availableDays.slice(7);
-    }
-  }
-
-  formatDay(date: Date): string {
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const d = date.getDate();
-    const m = date.getMonth() + 1;
-    const dayName = days[date.getDay()];
-    return `${dayName} ${d}/${m}`;
   }
 
   selectDay(day: string) {
     this.selectedDay = day;
     this.updateSteps(2);
 
-    const times: string[] = [];
-    for (let h = 12; h < 24; h++) {
-      times.push(`${h}:00 - ${h}:30`);
-      times.push(`${h}:30 - ${h + 1}:00`);
-    }
+    if (!this.nurse?._id) return;
 
-    this.availableTimes = times;
-    this.firstTimes = times.slice(0, 5);
-    this.remainingTimes = times.slice(5);
-  }
-
-  fetchDoctorData(doctorId: string) {
-    this.bookingService.getDoctorById(doctorId).subscribe({
-      next: (res) => {
-        this.doctor = res;
-        if (!this.doctor) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Doctor Not Found',
-            text: 'الدكتور غير موجود',
-          });
-        }
-      },
-      error: (err) => {
-        console.error(err);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'فشل في جلب بيانات الدكتور',
-        });
-      },
+    this.bookingService.getAvailableTimes(this.nurse._id, day).subscribe({
+      next: (times) => {
+        this.availableTimes = times;
+        this.firstTimes = times.slice(0, 5);
+        this.remainingTimes = times.slice(5);
+      }
     });
   }
 
-  loadReviews(doctorId: string) {
-    this.bookingService.getDoctorReviews(doctorId).subscribe({
+  fetchNurseData(nurseId: string) {
+    this.bookingService.getNurseById(nurseId).subscribe({
+      next: (res) => { this.nurse = res; },
+      error: (err) => console.error(err),
+    });
+  }
+
+  getDayMonth(day: string): string {
+    const parts = day.split(' ');
+    return parts[1].replace(',', '') + ' ' + parts[0];
+  }
+
+  loadReviews(nurseId: string) {
+    this.bookingService.getNurseReviews(nurseId).subscribe({
       next: (res: any[]) => {
         this.reviews = res;
         if (this.reviews.length > 0) {
@@ -150,7 +118,6 @@ const token = localStorage.getItem('token');
   toggleRemainingDays() { this.showRemainingDays = !this.showRemainingDays; }
   toggleRemainingTimes() { this.showRemainingTimes = !this.showRemainingTimes; }
   toggleDescription() { this.showFullDescription = !this.showFullDescription; }
-
   get f() { return this.bookingForm.controls; }
 
   selectTime(time: string) {
@@ -161,15 +128,6 @@ const token = localStorage.getItem('token');
   confirmBooking() {
     if (this.loading) return;
 
-    if (!this.doctor) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Doctor Not Found',
-        text: 'الدكتور غير موجود',
-      });
-      return;
-    }
-
     if (this.bookingForm.invalid || !this.selectedDay || !this.selectedTime) {
       Swal.fire({
         icon: 'warning',
@@ -179,35 +137,16 @@ const token = localStorage.getItem('token');
       return;
     }
 
-    if (!this.userId) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Not Logged In',
-        text: 'Please login to book an appointment.',
-      });
-      return;
-    }
-
     this.loading = true;
     this.updateSteps(4);
 
     const bookingData = {
-      userId: this.userId,
-      doctorId: this.doctor._id,
-      specialty: this.doctor.specialty,
+      nurse: this.nurse.name,
+      specialty: this.nurse.specialty,
       date: this.selectedDay,
       time: this.selectedTime,
-      patient: {
-        name: this.bookingForm.value.name,
-        phone: this.bookingForm.value.phone,
-        email: this.bookingForm.value.email,
-        age: this.bookingForm.value.age,
-        residence: this.bookingForm.value.residence,
-        notes: this.bookingForm.value.notes,
-      },
+      patient: this.bookingForm.value,
     };
-
-    console.log('Booking Data:', bookingData); // ✅ للتأكد من البيانات قبل الإرسال
 
     this.bookingService.createBooking(bookingData).subscribe({
       next: () => {
@@ -225,8 +164,7 @@ const token = localStorage.getItem('token');
           showConfirmButton: false,
         });
       },
-      error: (err) => {
-        console.error(err);
+      error: () => {
         this.loading = false;
         Swal.fire({
           icon: 'error',
@@ -250,7 +188,7 @@ const token = localStorage.getItem('token');
   }
 
   submitReview() {
-    if (this.reviewForm.invalid || !this.doctor?._id) {
+    if (this.reviewForm.invalid || !this.nurse?._id) {
       Swal.fire({
         icon: 'warning',
         title: 'Invalid Review',
@@ -259,13 +197,9 @@ const token = localStorage.getItem('token');
       return;
     }
 
-    const reviewData = {
-      rating: this.reviewForm.value.rating,
-      text: this.reviewForm.value.comment,
-      author: this.bookingForm.value.name || 'Anonymous',
-    };
+    const reviewData = this.reviewForm.value;
 
-    this.bookingService.addDoctorReview(this.doctor._id, reviewData).subscribe({
+    this.bookingService.addNurseReview(this.nurse._id, reviewData).subscribe({
       next: (newReview) => {
         this.reviews.unshift(newReview);
         this.reviewForm.reset();
@@ -296,7 +230,5 @@ const token = localStorage.getItem('token');
     }
   }
 
-  getRoundedRating(): number {
-    return Math.round(this.averageRating);
-  }
+  getRoundedRating(): number { return Math.round(this.averageRating); }
 }
