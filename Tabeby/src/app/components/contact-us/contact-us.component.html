@@ -133,9 +133,6 @@
             [class.active]="activeTab === 'doctors'" 
             (click)="loadSpecialties('doctors')" 
             data-tab="doctors">Doctors</a>
-            <a class="tab " data-tab="doctors"
-            [class.active]="activeTab === 'nurses'" 
-            (click)="loadSpecialties('nurses')">Nurses</a>
         </div>
                     
         <div class="search-form">
@@ -173,7 +170,7 @@
    </section>
 
     <!-- Specialists Section -->
-    <!-- <section class="specialists-section">
+    <section class="specialists-section">
         <div class="container">
             <div class="section-header">
                 
@@ -182,14 +179,16 @@
             </div>
             
             <div class="row">
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="doctor-card">
+                <div class="col-md-6 col-lg-3 mb-4" *ngFor="let doc of doctors">
+                   
+                    <div class="doctor-card" >
                         <div class="doctor-img">
-                            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Doctor">
+                            <img [src]="doc.userId?.image" 
+                             alt="Doctor">
                         </div>
-                        <div class="doctor-info" *ngFor="let doctor of topDoctors">
-                            <h5>{{ doctor.user.fullName }}</h5>
-                            <p class="specialty"> {{ doctor.specialty }}</p>
+                        <div class="doctor-info" >
+                            <h5>{{ doc.userId?.fullName }}-{{ doc.title }}</h5>
+                            <p class="specialty">{{ doc.specialty }}</p>
                             <p class="hospital">Cairo Medical Center</p>
                             <div class="rating">
                                 <i class="fas fa-star"></i>
@@ -199,85 +198,20 @@
                                 <i class="fas fa-star-half-alt"></i>
                                 <span class="ms-1">4.7</span>
                             </div>
-                            <p>Avg Rating: {{ doctor.avgRating | number:'1.1-1' }}</p>
-                            <p>Total Reviews: {{ doctor.totalReviews }}</p>
-                            <button href="#" class="btn btn-sm btn-primary w-100">Book Now</button>
+                            
+                            <button href="#" class="btn btn-sm btn-primary w-100" (click)="viewMoreDoctors()" >Book Now</button>
                         </div>
                     </div>
+    
                 </div>
                 
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="doctor-card">
-                        <div class="doctor-img">
-                            <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1528&q=80" alt="Doctor">
-                        </div>
-                        <div class="doctor-info">
-                            <h5>Dr. Ahmed Mohamed</h5>
-                            <p class="specialty">Neurologist</p>
-                            <p class="hospital">Alexandria Hospital</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                                <span class="ms-1">4.2</span>
-                            </div>
-                            <button href="#" class="btn btn-sm btn-primary w-100">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="doctor-card">
-                        <div class="doctor-img">
-                            <img src="https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Doctor">
-                        </div>
-                        <div class="doctor-info">
-                            <h5>Dr. Michael Brown</h5>
-                            <p class="specialty">Pediatrician</p>
-                            <p class="hospital">Children's Health Center</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span class="ms-1">5.0</span>
-                            </div>
-                            <button href="#" class="btn btn-sm btn-primary w-100">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="doctor-card">
-                        <div class="doctor-img">
-                            <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Doctor">
-                        </div>
-                        <div class="doctor-info">
-                            <h5>Dr. Lisa Williams</h5>
-                            <p class="specialty">Dermatologist</p>
-                            <p class="hospital">Skin Care Clinic</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <span class="ms-1">4.8</span>
-                            </div>
-                            <button href="#" class="btn btn-sm btn-primary w-100">Book Now</button>
-                        </div>
-                    </div>
-                </div>
             </div>
             
-            <div class="text-center mt-4">
-                <a href="#" class="btn btn-outline-primary">View All Doctors</a>
+            <div class="text-center mt-4"  *ngIf="!showAll">
+                    <button class="btn btn-outline-primary" (click)="viewMoreDoctors()">View All Doctors</button>
             </div>
         </div>
-    </section> -->
+    </section> 
 <!-- <section class="top-rated py-10">
   <div class="container">
     <h2 class="text-2xl font-bold mb-6 text-center">⭐ Top Rated Doctors</h2>
@@ -296,21 +230,6 @@
         </div>
 
         <p class="mt-2 font-bold text-blue-600">{{ doc.price }} EGP</p>
-      </div>
-    </div>
-  </div>
-</section> -->
-<section class="py-10">
-  <div class="container">
-    <h2 class="text-2xl font-bold mb-6 text-center">All Doctors</h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let d of doctors" class="p-5 border rounded-xl shadow bg-white">
-        <h3 class="text-lg font-semibold">{{ d.user.fullName }}</h3>
-        <p class="text-gray-600">{{ d.profile?.specialty }}</p>
-        <p class="text-sm text-gray-500">{{ d.profile?.location }}</p>
-        <p class="mt-2 text-gray-700">{{ d.profile?.description }}</p>
-        <p class="mt-2 font-bold text-blue-600">{{ d.profile?.price }} EGP</p>
       </div>
     </div>
   </div>

@@ -68,7 +68,7 @@
           <div class="slot-times" *ngIf="slot.times && slot.times.length > 0">
             <div *ngIf="hasAvailableSlots(slot.times); else noAvailable">
               <div *ngFor="let time of slot.times | slice:0:6">
-                <div class="time-slot" *ngIf="time.available">{{time.time}}</div>
+                <!-- <div class="time-slot" *ngIf="time.available">{{time.time}}</div> -->
               </div>
               <div class="more-times" *ngIf="getAvailableSlotCount(slot.times) > 6">More</div>
             </div>

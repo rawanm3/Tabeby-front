@@ -130,17 +130,30 @@ export class AdminComponent implements OnInit{
     });
   }
 
-  toggleActivation(user: User) {
-    this.dashboardService.toggleUserActivation(user._id).subscribe({
-      next: () => {
-        user.isActive = !user.isActive;
-      },
-      error: (error) => {
-        console.error('Error toggling user activation:', error);
-        alert('Error toggling user activation');
-      }
-    });
-  }
+  // toggleActivation(user: User) {
+  //   this.dashboardService.toggleUserActivation(user._id).subscribe({
+  //     next: () => {
+  //       user.isActive = !user.isActive;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error toggling user activation:', error);
+  //       alert('Error toggling user activation');
+  //     }
+  //   });
+  // }
+
+toggleActivation(user: User) {
+  this.dashboardService.toggleUserActivation(user._id).subscribe({
+    next: (res) => {
+      user.isActive = res.isActive;   // ✅ خد القيمة اللي راجعة من السيرفر
+    },
+    error: (error) => {
+      console.error('Error toggling user activation:', error);
+      alert('Error toggling user activation');
+    }
+  });
+}
+
 
   deleteUser(userId: string) {
     if (confirm('Are you sure you want to delete this user?')) {

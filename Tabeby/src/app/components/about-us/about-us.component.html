@@ -1,0 +1,12 @@
+<!-- src/app/components/doctors/doctors.component.html -->
+<div class="doctors-list">
+  <h2>قائمة الدكاترة</h2>
+
+  <div *ngFor="let doc of doctors" class="doctor-card">
+    <h3>{{ doc.userId?.fullName }} - {{ doc.title }}</h3>
+    <p><b>التخصص:</b> {{ doc.specialty }}</p>
+    <p><b>السعر:</b> {{ doc.price }} EGP</p>
+    <p><b>المكان:</b> {{ doc.location }}</p>
+    <p><b>الجنس:</b> {{ doc.userId?.gender }}</p>
+  </div>
+</div>

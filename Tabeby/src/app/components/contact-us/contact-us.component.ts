@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router'; // Import Router
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
+import { DoctorFilterService } from 'src/app/services/doctor-filter.service';
 import { ReviewService, TopRated } from 'src/app/services/review.service';
 import { SpecialtyService } from 'src/app/services/specialty.service';
 
@@ -16,11 +17,13 @@ export class ContactUsComponent implements OnInit {
   activeTab: 'doctors' | 'nurses' = 'doctors';
     topDoctors: TopRated[] = [];
   topNurses: TopRated[] = [];
+    doctors: any[] = [];
+
   gopatient() {
     this.router.navigate(['/patient']);
   }
   
-  constructor(private authService: AuthService,private specialtyService: SpecialtyService,private reviewService: ReviewService,private router:Router ) {}
+  constructor(private authService: AuthService,private doctorService: DoctorFilterService,private specialtyService: SpecialtyService,private reviewService: ReviewService,private router:Router ) {}
   
 
   loadSpecialties(type: 'doctors' | 'nurses') {
@@ -35,33 +38,14 @@ export class ContactUsComponent implements OnInit {
 }
 
 
-doctors: any[] = [];
-
-
-
-
-  // loadTopDoctors() {
-  //   this.reviewService.getTopDoctors().subscribe(data => {
-  //     console.log('Top Doctors:', data); // ✅ شوفي هنا البيانات راجعة ولا لأ
-  //     this.topDoctors = data;
-  //   });
-  // }
-
-  // loadTopNurses() {
-  //   this.reviewService.getTopNurses().subscribe(data => {
-  //     console.log('Top Nurses:', data); // ✅ شوفي هنا البيانات راجعة ولا لأ
-  //     this.topNurses = data;
-  //   });
-  // }
-
 
   ngOnInit(): void {
-    // this.loadTopDoctors();
-    // this.loadTopNurses();
-     this.reviewService.getAllDoctors().subscribe((data) => {
-      console.log("Doctors:", data);
-      this.doctors = data;
-    });
+
+     this.loadDoctors();
+    //  this.reviewService.getAllDoctors().subscribe((data) => {
+    //   console.log("Doctors:", data);
+    //   this.doctors = data;
+    // });
     this.loadSpecialties('doctors');
     this.authService.currentUser$.subscribe((u) => {
       this.user = u;
@@ -70,5 +54,26 @@ doctors: any[] = [];
 
   logout() {
     this.authService.logout();
+  }
+allDoctors: any[] = [];
+showAll: boolean = false;
+  // تحميل الدكاترة
+  loadDoctors() {
+    this.doctorService.getAllDoctors().subscribe({
+      next: (data) => {
+        this.allDoctors = data;           // خزني كل الدكاترة
+        this.doctors = this.allDoctors.slice(0, 4); // أول 4 بس في البداية
+        console.log('✅ All Doctors:', data);
+      },
+      error: (err) => {
+        console.error('❌ Error fetching doctors:', err);
+      }
+    });
+  }
+
+  // عرض كل الدكاترة عند الضغط على الزرار
+  viewMoreDoctors() {
+    this.showAll = true;
+    this.doctors = this.allDoctors; // خليها كلها
   }
 }

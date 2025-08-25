@@ -15,6 +15,8 @@ import { DoctorAppointmentComponent } from './components/doctor-appointment/doct
 import { PatientComponent } from './pages/patient/patient.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { VerifyOtpResetComponent } from './components/verify-otp-reset/verify-otp-reset.component';
+import { AboutUsComponent } from './components/about-us/about-us.component';
+import { DoctorBookingComponent } from './components/doctor-booking/doctor-booking.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/contact-us', pathMatch: 'full' },
@@ -27,8 +29,10 @@ const routes: Routes = [
     { path: 'verify-otp-reset', component: VerifyOtpResetComponent , canActivate: [authGuard] },
   { path: 'doctor', component: DoctorComponent, canActivate: [authGuard] },
   { path: 'doctors', component: DoctorAppointmentComponent },
+  { path: 'about-us', component: AboutUsComponent },
   {path : 'patient', component:PatientComponent  },
   {path : 'admin', component:AdminComponent  },
+  {path:'booking',component:DoctorBookingComponent},
   { path: '**', redirectTo: '/contact-us' }
 ];
 
