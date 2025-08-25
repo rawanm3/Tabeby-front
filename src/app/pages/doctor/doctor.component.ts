@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SlotsService, Slot } from '../../services/slots.service';
+import { DoctorService } from '../../services/doctor.service';
+import { AppointmentService } from '../../services/appointment.service';
 
 @Component({
   selector: 'app-doctor',
   templateUrl: './doctor.component.html',
   styleUrls: ['./doctor.component.scss']
 })
-export class DoctorComponent {
+export class DoctorComponent implements OnInit {
   activeTab: 'doctor' | 'clinic' | 'appointments' = 'doctor';
   appointmentFilter: 'upcoming' | 'previous' = 'upcoming';
   showAppointmentForm = false;
@@ -14,7 +16,7 @@ export class DoctorComponent {
   showAvailableSlots = false;
   availableSlots: Slot[] = [];
   selectedAppointment: any = null;
-  
+
   newAppointment: any = {
     patientName: '',
     date: '',
@@ -22,73 +24,63 @@ export class DoctorComponent {
     status: 'pending'
   };
 
-  doctor = {
-    name: 'سامي طارق',
-    title: 'إستشاري طب الأسنان',
-    photoUrl: 'https://via.placeholder.com/120x120.png?text=صورة',
-    stars: 5,
-    reviews: 74,
-    mainSpecialty: 'طب أسنان البالغين',
-    bio: 'طبيب أسنان خريج جامعة عين شمس. عضو الكلية الملكية للجراحين في أيرلندا. مقيم في قسم جراحة الوجه والفكين، جامعة عين شمس.'
-  };
+  doctor: any = null;   // user
+  clinic: any = null;   // profile (Doctor)
+  appointments: any[] = [];
+  workingHours: { day: string; time: string }[] = [];
 
-  clinic = {
-    info: 'العنوان: 23 شارع أكتوبر، القاهرة - من الأحد إلى الخميس من 10:00 إلى 18:00، الهاتف: +20 123 456 789'
-  };
+  constructor(
+    private slotsService: SlotsService,
+    private doctorService: DoctorService,
+    private appointmentService: AppointmentService
+  ) {}
 
-  workingHours = [
-    { day: 'الأحد', time: '10:00 ص - 6:00 م' },
-    { day: 'الإثنين', time: '10:00 ص - 6:00 م' },
-    { day: 'الثلاثاء', time: '10:00 ص - 6:00 م' },
-    { day: 'الأربعاء', time: '10:00 ص - 6:00 م' },
-    { day: 'الخميس', time: '10:00 ص - 6:00 م' },
-    { day: 'الجمعة', time: 'إجازة' },
-    { day: 'السبت', time: 'إجازة' }
-  ];
+  ngOnInit() {
+    this.loadDoctorData();
+    this.loadAppointments();
+  }
 
-  appointments = [
-    { 
-      id: 1, 
-      patientName: 'أحمد محمد', 
-      date: '2023-10-15', 
-      time: '10:00 ص', 
-      status: 'confirmed' 
-    },
-    { 
-      id: 2, 
-      patientName: 'فاطمة إبراهيم', 
-      date: '2023-10-16', 
-      time: '11:30 ص', 
-      status: 'confirmed' 
-    },
-    { 
-      id: 3, 
-      patientName: 'محمود السيد', 
-      date: '2023-10-17', 
-      time: '2:00 م', 
-      status: 'pending' 
-    },
-    { 
-      id: 4, 
-      patientName: 'سارة كمال', 
-      date: '2023-09-20', 
-      time: '10:00 ص', 
-      status: 'confirmed' 
-    },
-    { 
-      id: 5, 
-      patientName: 'علي حسن', 
-      date: '2023-09-15', 
-      time: '12:00 م', 
-      status: 'cancelled' 
+  private parseWorkingHours(workingHoursString: string) {
+    // Assuming the format is "من الأحد إلى الخميس من 9:00 إلى 17:00"
+    const daysAndTimes = workingHoursString.split('من').map(part => part.trim()).filter(part => part);
+    this.workingHours = daysAndTimes.map((part) => {
+      const [day, time] = part.split('إلى').map(p => p.trim());
+      return { day, time };
+    });
+  }
+
+  loadDoctorData() {
+    const storedUser = localStorage.getItem('user');
+    if (!storedUser) return;
+
+    const user = JSON.parse(storedUser);
+
+    if (user.role === 'doctor') {
+      this.doctorService.getDoctorProfile(user.id).subscribe({
+        next: (data: any) => {
+          this.doctor = data;
+          this.clinic = data;
+
+          // Parse working hours from string to array format
+          if (data.workingHours) {
+            this.parseWorkingHours(data.workingHours);
+          }
+        },
+        error: (err: any) => console.error('خطأ في تحميل بيانات الطبيب', err),
+      });
     }
-  ];
+  }
 
-  constructor(private slotsService: SlotsService) {}
+  loadAppointments(): void {
+    this.appointmentService.getAppointments().subscribe({
+      next: (data: any) => (this.appointments = data),
+      error: (err: any) => console.error('خطأ في تحميل المواعيد', err),
+    });
+  }
 
   get filteredAppointments() {
     const now = new Date();
-    return this.appointments.filter(apt => {
+    return this.appointments.filter((apt: any) => {
       const aptDate = new Date(apt.date);
       if (this.appointmentFilter === 'upcoming') {
         return aptDate >= now && apt.status !== 'cancelled';
@@ -99,28 +91,20 @@ export class DoctorComponent {
   }
 
   getStatusText(status: string): string {
-    const statusMap: {[key: string]: string} = {
-      'confirmed': 'مؤكد',
-      'pending': 'قيد الانتظار',
-      'cancelled': 'ملغي'
+    const statusMap: { [key: string]: string } = {
+      confirmed: 'مؤكد',
+      pending: 'قيد الانتظار',
+      cancelled: 'ملغي',
     };
     return statusMap[status] || status;
   }
 
   refreshAppointments() {
-    console.log('جاري تحديث قائمة المواعيد...');
-    setTimeout(() => {
-      this.appointments = [...this.appointments].sort((a, b) => {
-        const dateA = new Date(a.date + ' ' + a.time);
-        const dateB = new Date(b.date + ' ' + b.time);
-        return dateB.getTime() - dateA.getTime();
-      });
-      console.log('تم تحديث المواعيد بنجاح');
-    }, 1000);
+    this.loadAppointments();
   }
 
   updateAvailableSlots() {
-    this.slotsService.getAvailableSlots().subscribe(slots => {
+    this.slotsService.getAvailableSlots().subscribe((slots: Slot[]) => {
       this.availableSlots = slots;
       this.showAvailableSlots = true;
     });
@@ -132,26 +116,16 @@ export class DoctorComponent {
       return;
     }
 
-    const newId = Math.max(...this.appointments.map(a => a.id), 0) + 1;
-    this.appointments.push({
-      id: newId,
-      ...this.newAppointment
+    this.appointmentService.createAppointment(this.newAppointment).subscribe({
+      next: () => {
+        this.loadAppointments();
+        this.showAppointmentForm = false;
+        this.resetForm();
+        this.success();
+        this.updateAvailableSlots();
+      },
+      error: (err) => console.error('خطأ في إضافة الموعد', err),
     });
-    
-    this.showAppointmentForm = false;
-    this.newAppointment = {
-      patientName: '',
-      date: '',
-      time: '',
-      status: 'pending'
-    };
-    
-    this.showSuccessMessage = true;
-    setTimeout(() => {
-      this.showSuccessMessage = false;
-    }, 3000);
-    
-    this.updateAvailableSlots();
   }
 
   editAppointment(appointment: any) {
@@ -161,56 +135,62 @@ export class DoctorComponent {
       patientName: appointment.patientName,
       date: appointment.date,
       time: appointment.time,
-      status: appointment.status
+      status: appointment.status,
     };
   }
 
   updateAppointment() {
     if (this.selectedAppointment) {
-      const index = this.appointments.findIndex(a => a.id === this.selectedAppointment.id);
-      if (index !== -1) {
-        this.appointments[index] = {
-          ...this.selectedAppointment,
-          ...this.newAppointment
-        };
-      }
-      
-      this.showAppointmentForm = false;
-      this.selectedAppointment = null;
-      this.newAppointment = {
-        patientName: '',
-        date: '',
-        time: '',
-        status: 'pending'
-      };
-      
-      this.showSuccessMessage = true;
-      setTimeout(() => {
-        this.showSuccessMessage = false;
-      }, 3000);
-      
-      this.updateAvailableSlots();
+      this.appointmentService
+        .updateAppointment(this.selectedAppointment.id, this.newAppointment)
+        .subscribe({
+          next: () => {
+            this.loadAppointments();
+            this.showAppointmentForm = false;
+            this.selectedAppointment = null;
+            this.resetForm();
+            this.success();
+            this.updateAvailableSlots();
+          },
+          error: (err) => console.error('خطأ في تحديث الموعد', err),
+        });
     }
   }
 
   cancelAppointment(appointment: any) {
     if (confirm(`هل تريد فعلاً إلغاء موعد ${appointment.patientName}؟`)) {
-      appointment.status = 'cancelled';
-      this.showSuccessMessage = true;
-      setTimeout(() => {
-        this.showSuccessMessage = false;
-      }, 3000);
-      this.updateAvailableSlots();
+      this.appointmentService.cancelAppointment(appointment.id).subscribe({
+        next: () => {
+          this.loadAppointments();
+          this.success();
+          this.updateAvailableSlots();
+        },
+        error: (err) => console.error('خطأ في إلغاء الموعد', err),
+      });
     }
   }
 
   bookSlot(slotId: string) {
-    const slot = this.availableSlots.find(s => s.id === slotId);
+    const slot = this.availableSlots.find((s: Slot) => s.id === slotId);
     if (slot) {
       this.newAppointment.date = slot.date;
       this.newAppointment.time = slot.time;
       this.showAppointmentForm = true;
       this.showAvailableSlots = false;
     }
+  }
+
+  private resetForm() {
+    this.newAppointment = {
+      patientName: '',
+      date: '',
+      time: '',
+      status: 'pending',
+    };
+  }
+
+  private success() {
+    this.showSuccessMessage = true;
+    setTimeout(() => (this.showSuccessMessage = false), 3000);
   }
 }

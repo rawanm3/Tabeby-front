@@ -1,14 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { User } from '../models/user';
-
-interface LoginResponse {
-  token: string;
-}
 
 interface TokenPayload {
   id: string;
@@ -20,7 +16,7 @@ interface TokenPayload {
 interface LoginResponse {
   token: string;
   user: {
-    id: number;
+    id: string;   // ✅ كانت number خلتها string
     email: string;
     name: string;
     role: string;
@@ -38,10 +34,9 @@ export class AuthService {
   public isLoading$ = this.isLoadingSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
-    // Check for existing token on service initialization
     const token = localStorage.getItem('token');
     if (token) {
-      this.getCurrentUser().subscribe();
+      this.getCurrentUser().subscribe(); // هتظبط نفسها دلوقتي
     }
   }
 
@@ -49,51 +44,65 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/register`, formData);
   }
 
-  login(credentials: {
-    email: string;
-    password: string;
-  }): Observable<LoginResponse> {
-    return this.http
-      .post<LoginResponse>(`${this.baseUrl}/login`, credentials)
-      .pipe(
-        tap((response) => {
-          // خزّن التوكن
-          localStorage.setItem('token', response.token);
+  login(credentials: { email: string; password: string }): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, credentials).pipe(
+      tap((response) => {
+        localStorage.setItem('token', response.token);
+        const decoded: TokenPayload = jwtDecode(response.token);
 
-          //  فك التوكن واستخرج البيانات
-          const decoded: TokenPayload = jwtDecode(response.token);
+        const userData: User = {
+          id: parseInt(response.user.id),
+          name: response.user.name,
+          email: response.user.email,
+          role: response.user.role,
+        };
 
-          const userData = {
-            name: decoded.name,
-            email: decoded.email,
-            role: response.user.role,
-          };
-
-          localStorage.setItem('user', JSON.stringify(userData));
-          this.currentUserSubject.next(userData);
-        }),
-        catchError((err) => throwError(() => err))
-      );
+        localStorage.setItem('user', JSON.stringify(userData));
+        this.currentUserSubject.next(userData);
+      }),
+      catchError((err) => throwError(() => err))
+    );
   }
 
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
   get currentUserValue(): User | null {
     return this.currentUserSubject.value;
   }
 
-  getCurrentUser(): Observable<User> {
+  private authHeaders() {
+    const token = this.getToken();
+    return {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      }),
+    };
+  }
+
+  getCurrentUser(): Observable<any> {
     const token = this.getToken();
     if (!token) {
       return throwError(() => new Error('No token found'));
     }
 
-    return this.http.get<User>(`${this.baseUrl}/getUser`).pipe(
-      tap((user) => this.currentUserSubject.next(user)),
+    // ✅ بيضرب على /users/profile ومعاه التوكن
+    return this.http.get<any>(`${this.baseUrl}/profile`, this.authHeaders()).pipe(
+      tap((res) => {
+        if (res?.user) {
+          this.currentUserSubject.next({
+            id: res.user._id || res.user.id,
+            name: res.user.fullName || res.user.name,
+            email: res.user.email,
+            role: res.user.role,
+          });
+          localStorage.setItem('user', JSON.stringify(this.currentUserSubject.value));
+        }
+      }),
       catchError((error) => {
         this.logout();
         return throwError(() => error);
@@ -109,10 +118,6 @@ export class AuthService {
     return localStorage.getItem('token') || sessionStorage.getItem('token');
   }
 
-  getCurrentUserValue(): User | null {
-    return this.currentUserSubject.value;
-  }
-
   verifyOtp(data: { email: string; otp: string }) {
     return this.http.post(`${this.baseUrl}/verify-otp`, data);
   }
@@ -120,6 +125,7 @@ export class AuthService {
   resendOtp(email: string) {
     return this.http.post(`${this.baseUrl}/resend-otp`, { email });
   }
+
   resetPassword(data: { email: string; newPassword: string }) {
     return this.http.post(`${this.baseUrl}/reset-password`, data);
   }

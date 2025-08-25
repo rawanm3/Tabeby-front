@@ -1,8 +1,8 @@
-<div style="background: #f2f5fa; min-height: 100vh;">
+<!-- <div style="background: #f2f5fa; min-height: 100vh;"> -->
     
-    <app-doctor></app-doctor>
+    <!-- <app-doctor></app-doctor>
     <app-nurse></app-nurse>
-    <app-patient></app-patient> 
+    <app-patient></app-patient>  -->
     <!-- <app-register></app-register> -->
     <!-- <app-home></app-home> -->
     <!-- <app-contact-us></app-contact-us> -->
@@ -18,13 +18,13 @@
 
 
 <!-- <app-admin></app-admin>-->
-<!-- <router-outlet></router-outlet> -->
+<router-outlet></router-outlet> 
 
 
-    <div class="theme-settings" [class.open]="isOpen">
+    <!-- <div class="theme-settings" [class.open]="isOpen">
         <div class="theme-header text-center">
             <h5>Template Settings</h5>
-        </div>
+        </div> -->
 
         <!-- Dark/Light Toggle -->
         <div class="theme-toggle mb-3">
@@ -36,18 +36,18 @@
         </div>
 
         <!-- RTL/LTR Toggle -->
-        <div class="theme-toggle mb-3">
+        <!-- <div class="theme-toggle mb-3">
             <label class="toggle-switch">
                 <input type="checkbox" (change)="toggleLang()" [checked]="isRTL">
                 <span class="slider"></span>
                 <span class="label-text">{{ isRTL ? 'RTL' : 'LTR' }}</span>
             </label>
-        </div>
+        </div> -->
 
         <!-- Settings Button -->
-        <button class="settings-btn" (click)="isOpen = !isOpen">
+        <!-- <button class="settings-btn" (click)="isOpen = !isOpen">
             <i class="fa fa-gear" *ngIf="!isOpen"></i>
             <i class="fa fa-xmark" *ngIf="isOpen"></i>
         </button>
     </div>
-
+ -->

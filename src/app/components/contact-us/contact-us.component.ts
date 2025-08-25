@@ -16,10 +16,7 @@ export class ContactUsComponent implements OnInit {
   activeTab: 'doctors' | 'nurses' = 'doctors';
     topDoctors: TopRated[] = [];
   topNurses: TopRated[] = [];
-  gopatient() {
-    this.router.navigate(['/patient']);
-  }
-  
+    
   constructor(private authService: AuthService,private specialtyService: SpecialtyService,private reviewService: ReviewService,private router:Router ) {}
   
 

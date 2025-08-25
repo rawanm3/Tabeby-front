@@ -1,149 +1,71 @@
-<div class="profile">
-    <header class="header">
-        <img [src]="doctor.photoUrl" alt="Doctor Photo" class="photo" />
-        <div class="meta">
-            <h2>دكتور <span class="name">{{ doctor.name }}</span></h2>
-            <p class="title">{{ doctor.title }}</p>
+<div class="profile" *ngIf="doctor && clinic; else loading">
+  <header class="header">
+    <div class="photo-wrapper">
+      <img
+        [src]="doctor?.image ? ('/uploads/' + doctor.image) : 'assets/default-doctor.png'"
+        alt="Doctor Photo"
+        class="photo"
+      />
+      <span class="online-indicator" *ngIf="clinic.isOpen"></span>
+    </div>
 
-            <div class="rating">
-                <span class="stars">
-                    <ng-container *ngFor="let s of [1,2,3,4,5]; let i = index">
-                        <i class="star" [class.filled]="i < doctor.stars">★</i>
-                    </ng-container>
-                </span>
-                <span class="reviews">({{ doctor.reviews }} تقييم)</span>
-            </div>
-        </div>
+    <div class="meta">
+      <h2>{{ doctor.fullName || doctor.name }}</h2>
+      <p class="specialty">{{ clinic.title }}</p>
 
-        
-    </header>
-
-    <nav class="tabs">
-        <button [class.active]="activeTab==='doctor'" (click)="activeTab='doctor'">معلومات الطبيب</button>
-        <button [class.active]="activeTab==='clinic'" (click)="activeTab='clinic'">معلومات العيادة</button>
-        <button [class.active]="activeTab==='appointments'" (click)="activeTab='appointments'">المواعيد</button>
-    </nav>
-
-    <section class="tab-content" *ngIf="activeTab==='doctor'">
-        <h3>التخصص الرئيسي</h3>
-        <p>{{ doctor.mainSpecialty }}</p>
-        <h3>عن الطبيب</h3>
-        <p>{{ doctor.bio }}</p>
-    </section>
-
-    <section class="tab-content" *ngIf="activeTab==='clinic'">
-        <h3>معلومات العيادة</h3>
-        <p>{{ clinic.info }}</p>
-        <h3>ساعات العمل</h3>
-        <ul class="working-hours">
-            <li *ngFor="let hour of workingHours">
-                <span class="day">{{ hour.day }}</span>
-                <span class="time">{{ hour.time }}</span>
-            </li>
-        </ul>
-    </section>
-
-  <section class="tab-content appointments" *ngIf="activeTab==='appointments'">
-    <div class="appointment-header">
-      <h3>إدارة المواعيد</h3>
-      <div class="header-actions">
-        <button class="btn-secondary" (click)="refreshAppointments()">
-          <i class="fas fa-sync-alt"></i> تحديث
-        </button>
-        <button class="btn-primary" (click)="showAppointmentForm = true">
-          <i class="fas fa-plus"></i> إضافة موعد جديد
-        </button>
+      <div class="rating" *ngIf="clinic?.rating">
+        <ng-container *ngFor="let s of [1,2,3,4,5]; let i = index">
+          <i class="star" [class.filled]="i < (clinic.rating || 0)">★</i>
+        </ng-container>
+        <span class="reviews">({{ clinic.totalReviews || 0 }} تقييم)</span>
       </div>
     </div>
+  </header>
 
-    <div class="appointment-form" *ngIf="showAppointmentForm">
-      <h4>إضافة موعد جديد</h4>
-      <form (ngSubmit)="submitAppointment()" #appointmentForm="ngForm">
-        <div class="form-group">
-          <label for="patientName">اسم المريض</label>
-          <input type="text" id="patientName" name="patientName" [(ngModel)]="newAppointment.patientName"
-            required>
-        </div>
+  <nav class="tabs">
+    <button [class.active]="activeTab==='doctor'" (click)="activeTab='doctor'">معلومات الطبيب</button>
+    <button [class.active]="activeTab==='clinic'" (click)="activeTab='clinic'">معلومات العيادة</button>
+    <button [class.active]="activeTab==='appointments'" (click)="activeTab='appointments'">المواعيد</button>
+  </nav>
 
-        <div class="form-group">
-          <label for="appointmentDate">التاريخ</label>
-          <input type="date" id="appointmentDate" name="appointmentDate" [(ngModel)]="newAppointment.date"
-            required>
-        </div>
+  <section class="tab-content" *ngIf="activeTab==='doctor'">
+    <h3>التخصص الرئيسي</h3>
+    <p>{{ clinic.specialty }}</p>
 
-        <div class="form-group">
-          <label for="appointmentTime">الوقت</label>
-          <input type="time" id="appointmentTime" name="appointmentTime" [(ngModel)]="newAppointment.time"
-            required>
-        </div>
+    <h3>عن الطبيب</h3>
+    <p>{{ clinic.description }}</p>
+  </section>
 
-        <div class="form-actions">
-          <button type="button" class="btn-secondary" (click)="showAppointmentForm = false">إلغاء</button>
-          <button type="submit" class="btn-primary" [disabled]="!appointmentForm.valid">حفظ</button>
-        </div>
-      </form>
-    </div>
+  <section class="tab-content" *ngIf="activeTab==='clinic'">
+    <h3>معلومات العيادة</h3>
+    <p><strong>العنوان:</strong> {{ clinic.location }}</p>
+    <p><strong>سعر الكشف:</strong> {{ clinic.price }} جنيه</p>
 
-    <div class="appointment-filters">
-      <button [class.active]="appointmentFilter==='upcoming'" (click)="appointmentFilter='upcoming'">المواعيد
-        القادمة</button>
-      <button [class.active]="appointmentFilter==='previous'" (click)="appointmentFilter='previous'">المواعيد
-        السابقة</button>
-    </div>
+    <h3>ساعات العمل</h3>
+    <ul class="working-hours">
+      <li *ngFor="let hour of workingHours">
+        <span class="day">{{ hour.day }}</span>
+        <span class="time">{{ hour.time }}</span>
+      </li>
+    </ul>
+  </section>
 
+  <section class="tab-content appointments" *ngIf="activeTab==='appointments'">
     <div class="appointment-list">
       <div class="appointment-item" *ngFor="let appointment of filteredAppointments">
         <div class="appointment-info">
           <div class="patient-name">{{ appointment.patientName }}</div>
-          <div class="appointment-date">
-            <i class="far fa-calendar-alt"></i>
-            {{ appointment.date }}
-          </div>
-          <div class="appointment-time">
-            <i class="far fa-clock"></i>
-            {{ appointment.time }}
-          </div>
-          <div class="appointment-status" [class]="appointment.status">
-            {{ getStatusText(appointment.status) }}
-          </div>
+          <div class="appointment-date"><i class="far fa-calendar-alt"></i>{{ appointment.date }}</div>
+          <div class="appointment-time"><i class="far fa-clock"></i>{{ appointment.time }}</div>
+          <div class="appointment-status" [class]="appointment.status">{{ getStatusText(appointment.status) }}</div>
         </div>
-        <div class="appointment-actions">
-          <button class="btn-icon" (click)="editAppointment(appointment)">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="btn-icon btn-danger" (click)="cancelAppointment(appointment)">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="empty-state" *ngIf="filteredAppointments.length === 0">
-        <i class="far fa-calendar-check"></i>
-        <p>لا توجد مواعيد</p>
-      </div>
-    </div>
-
-    <div class="available-slots" *ngIf="showAvailableSlots">
-      <h4>المواعيد المتاحة</h4>
-      <div class="slot-list">
-        <div class="slot-item" *ngFor="let slot of availableSlots">
-          <span>{{ slot.date }} - {{ slot.time }}</span>
-          <button class="btn-small" (click)="bookSlot(slot.id)">احجز</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="success-overlay" *ngIf="showSuccessMessage">
-      <div class="success-message">
-        <div class="success-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <h3>تم تأكيد الحجز بنجاح!</h3>
-        <p>تم تأكيد الحجز بنجاح</p>
-        <button class="btn-close" (click)="showSuccessMessage = false">
-          <i class="fas fa-times"></i>
-        </button>
       </div>
     </div>
   </section>
 </div>
+
+<ng-template #loading>
+  <div class="loading-profile">
+    <i class="fas fa-spinner fa-spin"></i> جاري تحميل بيانات الدكتور...
+  </div>
+</ng-template>

@@ -37,22 +37,22 @@ export class LoginComponent implements OnInit, OnDestroy {
   private initializeForm(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['',  [Validators.required, Validators.minLength(8), this.passwordValidator]],
+      password: ['',  [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
     });
   }
-    private passwordValidator(control: AbstractControl): {[key: string]: any} | null {
-      const value = control.value;
-      if (!value) return null;
+    // private passwordValidator(control: AbstractControl): {[key: string]: any} | null {
+    //   const value = control.value;
+    //   if (!value) return null;
   
-      const hasNumber = /[0-9]/.test(value);
-      const hasUpper = /[A-Z]/.test(value);
-      const hasLower = /[a-z]/.test(value);
-      const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+    //   const hasNumber = /[0-9]/.test(value);
+    //   const hasUpper = /[A-Z]/.test(value);
+    //   const hasLower = /[a-z]/.test(value);
+    //   const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(value);
   
-      const valid = hasNumber && hasUpper && hasLower && hasSpecial;
-      return valid ? null : { passwordStrength: true };
-    }
+    //   const valid = hasNumber && hasUpper && hasLower && hasSpecial;
+    //   return valid ? null : { passwordStrength: true };
+    // }
   
   get email() {
     return this.loginForm.get('email');
