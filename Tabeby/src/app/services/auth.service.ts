@@ -30,8 +30,9 @@ interface LoginResponse {
   };
 }
 
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
   private baseUrl = 'http://localhost:3000/users';
@@ -40,7 +41,10 @@ export class AuthService {
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
   public isLoading$ = this.isLoadingSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
     // Check for existing token on service initialization
     const token = localStorage.getItem('token');
     if (token) {
@@ -52,32 +56,28 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/register`, formData);
   }
 
-  login(credentials: {
-    email: string;
-    password: string;
-  }): Observable<LoginResponse> {
-    return this.http
-      .post<LoginResponse>(`${this.baseUrl}/login`, credentials)
-      .pipe(
-        tap((response) => {
-          // خزّن التوكن
-          localStorage.setItem('token', response.token);
+ login(credentials: { email: string; password: string }): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, credentials).pipe(
+      tap(response => {
+        // خزّن التوكن
+        localStorage.setItem('token', response.token);
 
-          //  فك التوكن واستخرج البيانات
-          const decoded: TokenPayload = jwtDecode(response.token);
+        //  فك التوكن واستخرج البيانات
+        const decoded: TokenPayload = jwtDecode(response.token);
 
-          const userData = {
-            name: decoded.name,
-            email: decoded.email,
-            role: response.user.role,
-          };
+        const userData = {
+          name: decoded.name,
+          email: decoded.email,
+          role: response.user.role
+        };
 
-          localStorage.setItem('user', JSON.stringify(userData));
-          this.currentUserSubject.next(userData);
-        }),
-        catchError((err) => throwError(() => err))
-      );
+        localStorage.setItem('user', JSON.stringify(userData));
+        this.currentUserSubject.next(userData);
+      }),
+      catchError(err => throwError(() => err))
+    );
   }
+
 
   logout() {
     localStorage.removeItem('token');
@@ -89,6 +89,7 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+
   getCurrentUser(): Observable<User> {
     const token = this.getToken();
     if (!token) {
@@ -96,8 +97,8 @@ export class AuthService {
     }
 
     return this.http.get<User>(`${this.baseUrl}/getUser`).pipe(
-      tap((user) => this.currentUserSubject.next(user)),
-      catchError((error) => {
+      tap(user => this.currentUserSubject.next(user)),
+      catchError(error => {
         this.logout();
         return throwError(() => error);
       })
@@ -116,12 +117,11 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  verifyOtp(data: { email: string; otp: string }) {
-    return this.http.post(`${this.baseUrl}/verify-otp`, data);
-  }
+ verifyOtp(data: { email: string; otp: string }) {
+  return this.http.post(`${this.baseUrl}/verify-otp`, data);
+}
 
   resendOtp(email: string) {
-
   return this.http.post(`${this.baseUrl}/resend-otp`, { email });
  }
 resetPassword(data: { email: string; newPassword: string }) {
@@ -137,15 +137,15 @@ verifyOtpReset(data: { email: string; otp: string }) {
   return this.http.post(`${this.baseUrl}/verify-otp-reset`, data);
 }
 
-googleConnectUrl() {
-  // دي هتجيبلك لينك الـ consent من الباك
-  return this.http.get<{ url: string }>(`${environment.apiBase}/api/auth/google-auth-url`);
-}
+// googleConnectUrl() {
+//   // دي هتجيبلك لينك الـ consent من الباك
+//   return this.http.get<{ url: string }>(`${environment.apiBase}/api/auth/google-auth-url`);
+// }
 
-disconnectGoogle(): Observable<any> {
-  // دي هتضرب على POST في الباك لإلغاء الربط
-  return this.http.post(`${environment.apiBase}/api/auth/google/disconnect`, {});
-}
+// disconnectGoogle(): Observable<any> {
+//   // دي هتضرب على POST في الباك لإلغاء الربط
+//   return this.http.post(`${environment.apiBase}/api/auth/google/disconnect`, {});
+// }
 
 // لو محتاجة أحياناً تحدّث بيانات اليوزر بعد أي عملية (زي connect/disconnect)
 refreshMe() {
