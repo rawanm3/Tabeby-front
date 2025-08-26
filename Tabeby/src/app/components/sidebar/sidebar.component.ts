@@ -10,32 +10,39 @@ import { DoctorFilterPipe } from 'src/doctor-filter-pipe';
   standalone: false
 })
 export class SidebarComponent {
-  @Output() filterChange = new EventEmitter<any>();
-  // doctors: Doctor[] = [];
+//  @Output() filterChange = new EventEmitter<any>();
 
-  filter = {
-    name: '',
-    specialty: '',
-    city: '',
-    maxPrice: null
-  };
-  // constructor(private doctorFilterService: DoctorFilterService) {}
+//   filter = {
+//     name: '',
+//     specialty: '',
+//     city: '',
+//     maxPrice: null,
+//     titleProfessor: false,
+//     titleLecturer: false,
+//     titleConsultant: false,
+//     titleSpecialist: false,
+//     genderFemale: false,
+//     genderMale: false,
+//     acceptPromo: false,
+//     fee: 'any',
+//     availability: 'any', // any | today | tomorrow | wed
+//     entity: '', // hospital | clinic | center
+//     role: 'any' // any | doctor | nurse
+//   };
 
-  // applyFilter() {
-  //   this.doctorFilterService.getDoctors(this.filter).subscribe((res) => {
-  //     this.doctors = res;
-  //     console.log('Filtered Doctors:', this.doctors);
-  //   });
-  // }
-// onFiltersChanged(filters: any) {
-//   this.doctorFilterService.getDoctors(filters).subscribe((res) => {
-//     this.doctors = res;
-//   });
-// }
-//  onFilterChange() {
-//     this.doctorFilterService.getDoctors(this.filter).subscribe({
-//       next: (res) => this.doctors = res,
-//       error: (err) => console.error(err)
-//     });
+//   onFilterChange() {
+//     this.filterChange.emit(this.filter);
 //   }
+   filters: any = {
+    specialty: '',
+    location: '',
+    gender: '',
+    fee: ''
+  };
+
+  @Output() filterChange = new EventEmitter<any>();
+
+  applyFilter() {
+    this.filterChange.emit(this.filters);
+  }
 }

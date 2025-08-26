@@ -63,7 +63,7 @@
 <!-- الحالة لو فيه user -->
 <ng-container *ngIf="user; else guest">
   <li class="nav-item">
-    <span class="me-3" (click)="gopatient()">👋 أهلاً {{ user.name }}</span>
+    <span class="me-3" >👋 أهلاً {{ user.name }}</span>
   </li>
   <li class="nav-item">
     <button class="btn btn-danger" (click)="logout()">Logout</button>
@@ -127,50 +127,43 @@
   <!-- search section -->
     
    <section class="search-section mb-5">
-    <div class="search-card">
-        <div class="search-tabs">
-            <a class="tab active"
-            [class.active]="activeTab === 'doctors'" 
-            (click)="loadSpecialties('doctors')" 
-            data-tab="doctors">Doctors</a>
-            <a class="tab " data-tab="doctors"
-            [class.active]="activeTab === 'nurses'" 
-            (click)="loadSpecialties('nurses')">Nurses</a>
-        </div>
-                    
-        <div class="search-form">
-            <div class="search-row">
-                <div class="search-field">
-                    <i class="fas fa-stethoscope"></i>
-                    <select id="specialty">
-                        <option *ngFor="let spec of specialties" [value]="spec">{{ spec }}</option>
-                        <!-- <option value="">Select Specialty</option>
-                        <option value="cardiology">Cardiology</option>
-                        <option value="dermatology">Dermatology</option>
-                        <option value="neurology">Neurology</option>
-                        <option value="pediatrics">Pediatrics</option>
-                        <option value="orthopedics">Orthopedics</option> -->
-                    </select>
-                </div>
-                            
-                <div class="search-field">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <input type="text" placeholder="Location" id="location">
-                </div>
-                            
-                <div class="search-field">
-                    <i class="fas fa-user-md"></i>
-                    <input type="text" placeholder="Doctor's Name" id="doctor-name">
-                </div>
-                            
-                <button class="search-btn" routerLink="/doctors">
-                    <i class="fas fa-search"></i>
-                    Search
-                </button>
-            </div>
-        </div>
+  <div class="search-card">
+    <div class="search-tabs">
+      <a class="tab active"
+         [class.active]="activeTab === 'doctors'" 
+         (click)="loadSpecialties('doctors')" 
+         data-tab="doctors">Doctors</a>
     </div>
-   </section>
+                
+    <div class="search-form">
+      <div class="search-row">
+        <div class="search-field">
+          <i class="fas fa-stethoscope"></i>
+          <select id="specialty" [(ngModel)]="filters.specialty">
+            <option value="">Select Specialty</option>
+            <option *ngFor="let spec of specialties" [value]="spec">{{ spec }}</option>
+          </select>
+        </div>
+                      
+        <div class="search-field">
+          <i class="fas fa-map-marker-alt"></i>
+          <input type="text" placeholder="Location" id="location" [(ngModel)]="filters.location">
+        </div>
+                      
+        <div class="search-field">
+          <i class="fas fa-user-md"></i>
+          <input type="text" placeholder="Doctor's Name" id="doctor-name" [(ngModel)]="filters.name">
+        </div>
+                      
+        <button class="search-btn" (click)="searchDoctors()">
+          <i class="fas fa-search"></i>
+          Search
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
 
     <!-- Specialists Section -->
     <section class="specialists-section">
@@ -182,14 +175,24 @@
             </div>
             
             <div class="row">
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="doctor-card">
+                <div class="col-md-6 col-lg-3 mb-4" *ngFor="let doc of doctors">
+                   
+                    <div class="doctor-card" >
                         <div class="doctor-img">
-                            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Doctor">
+                            <!-- <img [src]="doc.userId?.image || 'assets/default-avatar.png'"
+                             alt="Doctor"> -->
+                              <img *ngIf="doc.userId?.image?.startsWith('http')" 
+             [src]="doc.userId?.image" 
+             alt="Doctor">
+
+        <!-- ✅ لو الـ backend بيرجع اسم الملف فقط -->
+        <img *ngIf="!doc.userId?.image?.startsWith('http')" 
+             [src]="'http://localhost:3000/uploads/' + doc.userId?.image" 
+             alt="Doctor">
                         </div>
-                        <div class="doctor-info" *ngFor="let doctor of topDoctors">
-                            <h5>{{ doctor.user.fullName }}</h5>
-                            <p class="specialty"> {{ doctor.specialty }}</p>
+                        <div class="doctor-info" >
+                            <h5>{{ doc.userId?.fullName }}-{{ doc.title }}</h5>
+                            <p class="specialty">{{ doc.specialty }}</p>
                             <p class="hospital">Cairo Medical Center</p>
                             <div class="rating">
                                 <i class="fas fa-star"></i>
@@ -199,85 +202,64 @@
                                 <i class="fas fa-star-half-alt"></i>
                                 <span class="ms-1">4.7</span>
                             </div>
-                            <p>Avg Rating: {{ doctor.avgRating | number:'1.1-1' }}</p>
-                            <p>Total Reviews: {{ doctor.totalReviews }}</p>
-                            <button href="#" class="btn btn-sm btn-primary w-100">Book Now</button>
+                            
+                            <button href="#" class="btn btn-sm btn-primary w-100" (click)="viewMoreDoctors()" >Book Now</button>
                         </div>
                     </div>
+    
                 </div>
                 
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="doctor-card">
-                        <div class="doctor-img">
-                            <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1528&q=80" alt="Doctor">
-                        </div>
-                        <div class="doctor-info">
-                            <h5>Dr. Ahmed Mohamed</h5>
-                            <p class="specialty">Neurologist</p>
-                            <p class="hospital">Alexandria Hospital</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                                <span class="ms-1">4.2</span>
-                            </div>
-                            <button href="#" class="btn btn-sm btn-primary w-100" routerLink="['/booking', doctor._id]">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="doctor-card">
-                        <div class="doctor-img">
-                            <img src="https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Doctor">
-                        </div>
-                        <div class="doctor-info">
-                            <h5>Dr. Michael Brown</h5>
-                            <p class="specialty">Pediatrician</p>
-                            <p class="hospital">Children's Health Center</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span class="ms-1">5.0</span>
-                            </div>
-                            <button href="#" class="btn btn-sm btn-primary w-100">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="doctor-card">
-                        <div class="doctor-img">
-                            <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Doctor">
-                        </div>
-                        <div class="doctor-info">
-                            <h5>Dr. Lisa Williams</h5>
-                            <p class="specialty">Dermatologist</p>
-                            <p class="hospital">Skin Care Clinic</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <span class="ms-1">4.8</span>
-                            </div>
-                            <button href="#" class="btn btn-sm btn-primary w-100">Book Now</button>
-                        </div>
-                    </div>
-                </div>
+
             </div>
             
-            <div class="text-center mt-4">
-                <a href="#" class="btn btn-outline-primary">View All Doctors</a>
+            <div class="text-center mt-4"  *ngIf="!showAll">
+                    <button class="btn btn-outline-primary" (click)="viewMoreDoctors()">View All Doctors</button>
             </div>
         </div>
-    </section>
+    </section> 
+<!-- <section class="top-rated py-10">
+  <div class="container">
+    <h2 class="text-2xl font-bold mb-6 text-center">⭐ Top Rated Doctors</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let doc of topDoctors" class="p-5 border rounded-xl shadow bg-white">
+        <h3 class="text-lg font-semibold">{{ doc.user?.fullName }}</h3>
+        <p class="text-gray-600">{{ doc.specialty }}</p>
+        <p class="text-sm text-gray-500">{{ doc.location }}</p>
+        <p class="mt-2 text-gray-700">{{ doc.description }}</p>
+
+        <div class="flex items-center mt-3">
+          <span class="text-yellow-500 text-xl">★</span>
+          <span class="ml-1 font-medium">{{ doc.avgRating | number:'1.1-1' }}</span>
+          <span class="ml-2 text-gray-500">({{ doc.totalReviews }} reviews)</span>
+        </div>
+
+        <p class="mt-2 font-bold text-blue-600">{{ doc.price }} EGP</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 
+<section class="top-rated py-10 bg-gray-50">
+  <div class="container">
+    <h2 class="text-2xl font-bold mb-6 text-center">⭐ Top Rated Nurses</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let nurse of topNurses" class="p-5 border rounded-xl shadow bg-white">
+        <h3 class="text-lg font-semibold">{{ nurse.user?.fullName }}</h3>
+        <p class="text-gray-600">{{ nurse.specialty }}</p>
+        <p class="text-sm text-gray-500">{{ nurse.location }}</p>
+
+        <div class="flex items-center mt-3">
+          <span class="text-yellow-500 text-xl">★</span>
+          <span class="ml-1 font-medium">{{ nurse.avgRating | number:'1.1-1' }}</span>
+          <span class="ml-2 text-gray-500">({{ nurse.totalReviews }} reviews)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
 
    <!-- Services Section -->
    <section class="services-section py-5 ">
@@ -326,7 +308,7 @@
                     </div>
                     <h4>Cardiology</h4>
                     <p>Heart and cardiovascular system specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a  [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Cardiology' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -335,7 +317,7 @@
                     </div>
                     <h4>Neurology</h4>
                     <p>Specialists in brain and nervous system</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Neurology' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -344,7 +326,7 @@
                     </div>
                     <h4>Orthopedics</h4>
                     <p>Bones, joints and musculoskeletal system</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Orthopedics' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -353,7 +335,7 @@
                     </div>
                     <h4>Pediatrics</h4>
                     <p>Child healthcare specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Pediatrics and Neonatology' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -362,7 +344,7 @@
                     </div>
                     <h4>Dermatology</h4>
                     <p>Skin, hair and nail specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Dermatology' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -371,7 +353,7 @@
                     </div>
                     <h4>Ophthalmology</h4>
                     <p>Eye care and vision specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Orthopedics' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -380,7 +362,7 @@
                     </div>
                     <h4>Dentistry</h4>
                     <p>Oral health and dental care specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Dentistry' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -389,12 +371,12 @@
                     </div>
                     <h4>General Surgery</h4>
                     <p>Surgical procedure specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Oncological Surgery' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
             
             <div class="text-center mt-4">
-                <a href="#" class="btn btn-outline-primary">View All Specialties</a>
+                <a [routerLink]="['/doctors']"  class="btn btn-outline-primary">View All Specialties</a>
             </div>
         </div>
     </section>

@@ -3,5 +3,9 @@ export interface User {
   email?: string;
   name?: string;
   role?: string;
-  
+    // 👇 دي جديدة
+  google?: {
+    accessToken?: string;
+    refreshToken?: string;
+  };
 }

@@ -20,10 +20,10 @@
   <div class="doctor-card" *ngFor="let doctor of sortedDoctors">
     <div class="doctor-info">
       <div class="doctor-image">
-        <img [src]="doctor.image || 'assets/default-doctor.png'" alt="{{doctor.name}}">
+        <img [src]="doctor.image || 'assets/default-doctor.png'" alt="{{doctor.fullName}}">
       </div>
       <div class="doctor-details">
-        <h3>Doctor <span class="doctor-name">{{doctor.name}}</span></h3>
+        <h3>Doctor <span class="doctor-name">{{doctor.fullName}}</span></h3>
         <p class="doctor-title">{{doctor.title}} of {{doctor.specialty}}</p>
         
         <div class="rating">
@@ -68,7 +68,7 @@
           <div class="slot-times" *ngIf="slot.times && slot.times.length > 0">
             <div *ngIf="hasAvailableSlots(slot.times); else noAvailable">
               <div *ngFor="let time of slot.times | slice:0:6">
-                <div class="time-slot" *ngIf="time.available">{{time.time}}</div>
+                <!-- <div class="time-slot" *ngIf="time.available">{{time.time}}</div> -->
               </div>
               <div class="more-times" *ngIf="getAvailableSlotCount(slot.times) > 6">More</div>
             </div>

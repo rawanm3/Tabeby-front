@@ -35,7 +35,7 @@ export class ForgotPasswordComponent {
         sessionStorage.setItem('pendingEmail', email);
 
         // نروح verify otp
-        this.router.navigate(['/verify-otp']);
+        this.router.navigate(['/verify-otp-reset']);
       },
       error: (err) => {
         this.isLoading = false;

@@ -3,15 +3,24 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 
+// export interface User {
+//   _id: string;
+//   name: string;
+//   email: string;
+//   role: string;
+//   isVerified: boolean;
+//   isActive: boolean;
+// }
+// dashboard.service.ts
 export interface User {
   _id: string;
-  name: string;
+  fullName: string;
   email: string;
   role: string;
   isVerified: boolean;
   isActive: boolean;
+  createdAt?: string; // Add this optional property
 }
-
 @Injectable({
   providedIn: 'root'
 })

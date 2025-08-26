@@ -24,6 +24,10 @@ export class RegisterComponent implements OnInit {
  certificateFile: File | null = null;
  previewUrl: string | ArrayBuffer | null = null;
 
+profileImageFile: File | null = null;
+profilePreviewUrl: string | ArrayBuffer | null = null;
+
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -249,6 +253,10 @@ export class RegisterComponent implements OnInit {
      if (this.certificateFile) {
        formData.append('certificate', this.certificateFile);
      }
+     if (this.profileImageFile) {
+       formData.append('profileImage', this.profileImageFile);
+     }
+
 
      this.authService.register(formData).subscribe({
        next: (res) => {
@@ -285,6 +293,27 @@ export class RegisterComponent implements OnInit {
      return 0; // لسه ما اشتغلش
    }
  }
+
+ 
+onProfileSelected(event: any) {
+  const file = event.target.files?.[0] || null;
+  this.profileImageFile = file;
+
+  if (file && file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = () => { this.profilePreviewUrl = reader.result; };
+    reader.readAsDataURL(file);
+  } else {
+    this.profilePreviewUrl = null;
+  }
+}
+
+removeProfileImage() {
+  this.profileImageFile = null;
+  this.profilePreviewUrl = null;
+}
+
+
 
   get stepTitle(): string {
    switch (this.currentStep) {

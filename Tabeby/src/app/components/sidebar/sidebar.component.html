@@ -1,0 +1,67 @@
+<div class="sidebar">
+  <div class="sidebar-header">
+    <mat-icon class="sidebar-header-icon">filter_list</mat-icon>
+    <span class="sidebar-header-title">Filters</span>
+  </div>
+
+  <mat-accordion multi>
+    <!-- Specialty -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="sidebar-section-icon">school</mat-icon>
+          Specialty
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <input matInput placeholder="Enter specialty"
+             [(ngModel)]="filters.specialty"
+             (ngModelChange)="applyFilter()" />
+    </mat-expansion-panel>
+
+    <!-- Location -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="sidebar-section-icon">location_on</mat-icon>
+          Location
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <input matInput placeholder="Enter location"
+             [(ngModel)]="filters.location"
+             (ngModelChange)="applyFilter()" />
+    </mat-expansion-panel>
+
+    <!-- Gender -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="sidebar-section-icon">transgender</mat-icon>
+          Gender
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-radio-group [(ngModel)]="filters.gender" (change)="applyFilter()">
+        <mat-radio-button value="">All</mat-radio-button><br>
+        <mat-radio-button value="male">Male</mat-radio-button><br>
+        <mat-radio-button value="female">Female</mat-radio-button>
+      </mat-radio-group>
+    </mat-expansion-panel>
+
+    <!-- Fee -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="sidebar-section-icon">attach_money</mat-icon>
+          Examination Fee
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-radio-group [(ngModel)]="filters.fee" (change)="applyFilter()">
+        <mat-radio-button value="">Any</mat-radio-button><br>
+        <mat-radio-button value="lt50">Less than 50</mat-radio-button><br>
+        <mat-radio-button value="50-100">From 50 to 100</mat-radio-button><br>
+        <mat-radio-button value="100-200">From 100 to 200</mat-radio-button><br>
+        <mat-radio-button value="200-300">From 200 to 300</mat-radio-button><br>
+        <mat-radio-button value="gt300">Greater than 300</mat-radio-button>
+      </mat-radio-group>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

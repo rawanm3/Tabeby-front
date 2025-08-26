@@ -14,38 +14,32 @@ import { PatientComponent } from './pages/patient/patient.component';
 import { AdminComponent } from './components/admin/admin.component';
 
 import { authGuard } from './guards/auth.guard';
+
+import { VerifyOtpResetComponent } from './components/verify-otp-reset/verify-otp-reset.component';
+import { AboutUsComponent } from './components/about-us/about-us.component';
 import { DoctorBookingComponent } from './components/doctor-booking/doctor-booking.component';
 
 const routes: Routes = [
   // الصفحة الافتراضية
   { path: '', redirectTo: '/contact-us', pathMatch: 'full' },
-
   // الصفحات العامة
   { path: 'contact-us', component: ContactUsComponent },
-  { path: 'doctors', component: DoctorAppointmentComponent },
-
   // صفحات الدخول والتسجيل
   { path: 'login', component: LoginComponent, canActivate: [authGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [authGuard] },
-  {path: 'verify-otp',component: VerifyOtpComponent,canActivate: [authGuard],},
-  {
-    path: 'forgot-password',
-    component: ForgotPasswordComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'reset-password',
-    component: ResetPasswordComponent,
-    canActivate: [authGuard],
-  },
-
-  // صفحات حسب الدور
+  { path: 'verify-otp', component: VerifyOtpComponent, canActivate: [authGuard]},
+  { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [authGuard] },
+  { path: 'reset-password', component: ResetPasswordComponent , canActivate: [authGuard]},
+  { path: 'verify-otp-reset', component: VerifyOtpResetComponent , canActivate: [authGuard] },
   { path: 'doctor', component: DoctorComponent, canActivate: [authGuard] },
-  { path: 'patient', component: PatientComponent, canActivate: [authGuard] },
-  { path: 'admin', component: AdminComponent, canActivate: [authGuard] },
-  { path: 'booking/:id', component: DoctorBookingComponent },
-  // أي مسار غير موجود يرجع للصفحة الرئيسية
+  { path: 'doctors', component: DoctorAppointmentComponent },
+  { path: 'about-us', component: AboutUsComponent },
+  {path : 'patient', component:PatientComponent  },
+  {path : 'admin', component:AdminComponent  },
+  {path:'booking',component:DoctorBookingComponent},
   { path: '**', redirectTo: '/contact-us' },
+  { path: 'booking/:id', component: DoctorBookingComponent },
+
 ];
 
 @NgModule({
