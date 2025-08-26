@@ -63,7 +63,7 @@
 <!-- الحالة لو فيه user -->
 <ng-container *ngIf="user; else guest">
   <li class="nav-item">
-    <span class="me-3" (click)="gopatient()">👋 أهلاً {{ user.name }}</span>
+    <span class="me-3" >👋 أهلاً {{ user.name }}</span>
   </li>
   <li class="nav-item">
     <button class="btn btn-danger" (click)="logout()">Logout</button>
@@ -127,47 +127,43 @@
   <!-- search section -->
     
    <section class="search-section mb-5">
-    <div class="search-card">
-        <div class="search-tabs">
-            <a class="tab active"
-            [class.active]="activeTab === 'doctors'" 
-            (click)="loadSpecialties('doctors')" 
-            data-tab="doctors">Doctors</a>
-        </div>
-                    
-        <div class="search-form">
-            <div class="search-row">
-                <div class="search-field">
-                    <i class="fas fa-stethoscope"></i>
-                    <select id="specialty">
-                        <option *ngFor="let spec of specialties" [value]="spec">{{ spec }}</option>
-                        <!-- <option value="">Select Specialty</option>
-                        <option value="cardiology">Cardiology</option>
-                        <option value="dermatology">Dermatology</option>
-                        <option value="neurology">Neurology</option>
-                        <option value="pediatrics">Pediatrics</option>
-                        <option value="orthopedics">Orthopedics</option> -->
-                    </select>
-                </div>
-                            
-                <div class="search-field">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <input type="text" placeholder="Location" id="location">
-                </div>
-                            
-                <div class="search-field">
-                    <i class="fas fa-user-md"></i>
-                    <input type="text" placeholder="Doctor's Name" id="doctor-name">
-                </div>
-                            
-                <button class="search-btn" routerLink="/doctors">
-                    <i class="fas fa-search"></i>
-                    Search
-                </button>
-            </div>
-        </div>
+  <div class="search-card">
+    <div class="search-tabs">
+      <a class="tab active"
+         [class.active]="activeTab === 'doctors'" 
+         (click)="loadSpecialties('doctors')" 
+         data-tab="doctors">Doctors</a>
     </div>
-   </section>
+                
+    <div class="search-form">
+      <div class="search-row">
+        <div class="search-field">
+          <i class="fas fa-stethoscope"></i>
+          <select id="specialty" [(ngModel)]="filters.specialty">
+            <option value="">Select Specialty</option>
+            <option *ngFor="let spec of specialties" [value]="spec">{{ spec }}</option>
+          </select>
+        </div>
+                      
+        <div class="search-field">
+          <i class="fas fa-map-marker-alt"></i>
+          <input type="text" placeholder="Location" id="location" [(ngModel)]="filters.location">
+        </div>
+                      
+        <div class="search-field">
+          <i class="fas fa-user-md"></i>
+          <input type="text" placeholder="Doctor's Name" id="doctor-name" [(ngModel)]="filters.name">
+        </div>
+                      
+        <button class="search-btn" (click)="searchDoctors()">
+          <i class="fas fa-search"></i>
+          Search
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
 
     <!-- Specialists Section -->
     <section class="specialists-section">
@@ -183,8 +179,16 @@
                    
                     <div class="doctor-card" >
                         <div class="doctor-img">
-                            <img [src]="doc.userId?.image" 
-                             alt="Doctor">
+                            <!-- <img [src]="doc.userId?.image || 'assets/default-avatar.png'"
+                             alt="Doctor"> -->
+                              <img *ngIf="doc.userId?.image?.startsWith('http')" 
+             [src]="doc.userId?.image" 
+             alt="Doctor">
+
+        <!-- ✅ لو الـ backend بيرجع اسم الملف فقط -->
+        <img *ngIf="!doc.userId?.image?.startsWith('http')" 
+             [src]="'http://localhost:3000/uploads/' + doc.userId?.image" 
+             alt="Doctor">
                         </div>
                         <div class="doctor-info" >
                             <h5>{{ doc.userId?.fullName }}-{{ doc.title }}</h5>
@@ -303,7 +307,7 @@
                     </div>
                     <h4>Cardiology</h4>
                     <p>Heart and cardiovascular system specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a  [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Cardiology' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -312,7 +316,7 @@
                     </div>
                     <h4>Neurology</h4>
                     <p>Specialists in brain and nervous system</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Neurology' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -321,7 +325,7 @@
                     </div>
                     <h4>Orthopedics</h4>
                     <p>Bones, joints and musculoskeletal system</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Orthopedics' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -330,7 +334,7 @@
                     </div>
                     <h4>Pediatrics</h4>
                     <p>Child healthcare specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Pediatrics and Neonatology' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -339,7 +343,7 @@
                     </div>
                     <h4>Dermatology</h4>
                     <p>Skin, hair and nail specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Dermatology' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -348,7 +352,7 @@
                     </div>
                     <h4>Ophthalmology</h4>
                     <p>Eye care and vision specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Orthopedics' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -357,7 +361,7 @@
                     </div>
                     <h4>Dentistry</h4>
                     <p>Oral health and dental care specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Dentistry' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
                 
                 <div class="specialty-card">
@@ -366,12 +370,12 @@
                     </div>
                     <h4>General Surgery</h4>
                     <p>Surgical procedure specialists</p>
-                    <a href="#">Find Doctors <i class="fas fa-arrow-right"></i></a>
+                    <a [routerLink]="['/doctors']" [queryParams]="{ specialty: 'Oncological Surgery' }">Find Doctors <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
             
             <div class="text-center mt-4">
-                <a href="#" class="btn btn-outline-primary">View All Specialties</a>
+                <a [routerLink]="['/doctors']"  class="btn btn-outline-primary">View All Specialties</a>
             </div>
         </div>
     </section>

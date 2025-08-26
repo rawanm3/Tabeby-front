@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Doctor } from '../../models/doctor.model';
+import { ActivatedRoute } from '@angular/router';
 import { DoctorFilterService } from 'src/app/services/doctor-filter.service';
 
 @Component({
@@ -9,44 +8,133 @@ import { DoctorFilterService } from 'src/app/services/doctor-filter.service';
   styleUrls: ['./doctor-appointment.component.scss']
 })
 export class DoctorAppointmentComponent implements OnInit {
-   allDoctors: any[] = [];
+  allDoctors: any[] = [];
   filteredDoctors: any[] = [];
   sortedDoctors: any[] = [];
 
   selectedSorting: string = 'Best Match';
 
-  constructor(private doctorService: DoctorFilterService) {}
+  constructor(
+    private doctorService: DoctorFilterService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.loadDoctors();
+
+    // استمع ل query params اللي جاية من الهوم
+   this.route.queryParams.subscribe(params => {
+    this.applyFilter(params);
+  });
   }
 
+  // loadDoctors() {
+  //   this.doctorService.getAllDoctors().subscribe({
+  //     next: (data) => {
+  //       this.allDoctors = data;
+  //       this.filteredDoctors = [...this.allDoctors];
+  //       this.sortDoctors();
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching doctors:', err);
+  //     }
+  //   });
+  // }
   loadDoctors() {
-    this.doctorService.getAllDoctors().subscribe({
-      next: (data) => {
-        this.allDoctors = data;
-        this.filteredDoctors = [...this.allDoctors];
-        this.sortDoctors();
-      },
-      error: (err) => {
-        console.error('Error fetching doctors:', err);
-      }
-    });
+  this.doctorService.getAllDoctors().subscribe({
+    next: (data) => {
+      this.allDoctors = data;
+      this.filteredDoctors = [...this.allDoctors];
+      this.sortDoctors();
+
+      // ✅ بعد ما اتحملت الدكاترة، طبقي أي params موجودة
+      this.route.queryParams.subscribe(params => {
+        console.log("🔍 Params from home:", params);
+        if (Object.keys(params).length > 0) {
+          this.applyFilter(params);
+        }
+      });
+    },
+    error: (err) => {
+      console.error('Error fetching doctors:', err);
+    }
+  });
+}
+
+     // ✅ دي اللي كانت ناقصة
+  onFilterChange(filters: any) {
+    this.applyFilter(filters);
   }
 
-  // الفلتر جاي من الـ sidebar
-  onFilterChange(filter: any) {
-    this.filteredDoctors = this.allDoctors.filter((doc) => {
-      return (!filter.specialty || doc.specialty === filter.specialty) &&
-             (!filter.location || doc.location === filter.location) &&
-             (!filter.priceMin || doc.price >= filter.priceMin) &&
-             (!filter.priceMax || doc.price <= filter.priceMax);
-    });
+  // applyFilter(filters: any) {
+  //   this.filteredDoctors = this.allDoctors.filter((doc) => {
+  //     let match = true;
 
-    this.sortDoctors();
-  }
+  //     if (filters.specialty && !doc.specialty.toLowerCase().includes(filters.specialty.toLowerCase())) {
+  //       match = false;
+  //     }
+  //     if (filters.location && !doc.location.toLowerCase().includes(filters.location.toLowerCase())) {
+  //       match = false;
+  //     }
+  //     if (filters.name && !doc.name.toLowerCase().includes(filters.name.toLowerCase())) {
+  //       match = false;
+  //     }
+  //     if (filters.gender && doc.gender !== filters.gender) {
+  //       match = false;
+  //     }
+  //     if (filters.fee) {
+  //       if (filters.fee === 'lt50' && !(doc.price < 50)) match = false;
+  //       if (filters.fee === '50-100' && !(doc.price >= 50 && doc.price <= 100)) match = false;
+  //       if (filters.fee === '100-200' && !(doc.price >= 100 && doc.price <= 200)) match = false;
+  //       if (filters.fee === '200-300' && !(doc.price >= 200 && doc.price <= 300)) match = false;
+  //       if (filters.fee === 'gt300' && !(doc.price > 300)) match = false;
+  //     }
 
-  // ترتيب الدكاترة
+  //     return match;
+  //   });
+
+  //   this.sortDoctors();
+  // }
+applyFilter(filters: any) {
+  this.filteredDoctors = this.allDoctors.filter((doc) => {
+    let match = true;
+
+    // ✅ specialty
+    if (filters.specialty && !doc.specialty.toLowerCase().includes(filters.specialty.toLowerCase())) {
+      match = false;
+    }
+
+    // ✅ location
+    if (filters.location && !doc.location.toLowerCase().includes(filters.location.toLowerCase())) {
+      match = false;
+    }
+
+    // ✅ name (من userId)
+    if (filters.name && !doc.userId.fullName.toLowerCase().includes(filters.name.toLowerCase())) {
+      match = false;
+    }
+
+    // ✅ gender (من userId)
+    // خليه كده:
+if (filters.gender && doc.userId?.gender?.toLowerCase() !== filters.gender.toLowerCase()) {
+  match = false;
+}
+
+    // ✅ fee
+    if (filters.fee) {
+      if (filters.fee === 'lt50' && !(doc.price < 50)) match = false;
+      if (filters.fee === '50-100' && !(doc.price >= 50 && doc.price <= 100)) match = false;
+      if (filters.fee === '100-200' && !(doc.price >= 100 && doc.price <= 200)) match = false;
+      if (filters.fee === '200-300' && !(doc.price >= 200 && doc.price <= 300)) match = false;
+      if (filters.fee === 'gt300' && !(doc.price > 300)) match = false;
+    }
+
+    return match;
+  });
+
+  this.sortDoctors();
+}
+
   changeSorting(type: string) {
     this.selectedSorting = type;
     this.sortDoctors();
@@ -65,13 +153,11 @@ export class DoctorAppointmentComponent implements OnInit {
       case 'Highest Price':
         this.sortedDoctors.sort((a, b) => b.price - a.price);
         break;
-      default: // Best Match
-        // سيبيه زي ما هو أو تعملي logic حسب الحاجة
+      default:
         break;
     }
   }
 
-  // Helpers for slots
   hasAvailableSlots(times: any[]): boolean {
     return times && times.some(t => t.available);
   }

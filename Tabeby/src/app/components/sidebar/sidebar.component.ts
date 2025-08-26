@@ -10,26 +10,39 @@ import { DoctorFilterPipe } from 'src/doctor-filter-pipe';
   standalone: false
 })
 export class SidebarComponent {
- @Output() filterChange = new EventEmitter<any>();
+//  @Output() filterChange = new EventEmitter<any>();
 
-  filter = {
-    name: '',
+//   filter = {
+//     name: '',
+//     specialty: '',
+//     city: '',
+//     maxPrice: null,
+//     titleProfessor: false,
+//     titleLecturer: false,
+//     titleConsultant: false,
+//     titleSpecialist: false,
+//     genderFemale: false,
+//     genderMale: false,
+//     acceptPromo: false,
+//     fee: 'any',
+//     availability: 'any', // any | today | tomorrow | wed
+//     entity: '', // hospital | clinic | center
+//     role: 'any' // any | doctor | nurse
+//   };
+
+//   onFilterChange() {
+//     this.filterChange.emit(this.filter);
+//   }
+   filters: any = {
     specialty: '',
-    city: '',
-    maxPrice: null,
-    titleProfessor: false,
-    titleLecturer: false,
-    titleConsultant: false,
-    titleSpecialist: false,
-    genderFemale: false,
-    genderMale: false,
-    acceptPromo: false,
-    fee: 'any',
-    availability: 'any', // any | today | tomorrow | wed
-    entity: '', // hospital | clinic | center
-    role: 'any' // any | doctor | nurse
+    location: '',
+    gender: '',
+    fee: ''
   };
 
-  onFilterChange() {
-    this.filterChange.emit(this.filter);
-  }}
+  @Output() filterChange = new EventEmitter<any>();
+
+  applyFilter() {
+    this.filterChange.emit(this.filters);
+  }
+}

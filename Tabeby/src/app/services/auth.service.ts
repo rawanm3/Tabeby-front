@@ -1,3 +1,6 @@
+import { environment } from 'src/app/enviroments/environment';
+
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
@@ -134,5 +137,18 @@ verifyOtpReset(data: { email: string; otp: string }) {
   return this.http.post(`${this.baseUrl}/verify-otp-reset`, data);
 }
 
+googleConnectUrl() {
+  // دي هتجيبلك لينك الـ consent من الباك
+  return this.http.get<{ url: string }>(`${environment.apiBase}/api/auth/google-auth-url`);
+}
 
+disconnectGoogle(): Observable<any> {
+  // دي هتضرب على POST في الباك لإلغاء الربط
+  return this.http.post(`${environment.apiBase}/api/auth/google/disconnect`, {});
+}
+
+// لو محتاجة أحياناً تحدّث بيانات اليوزر بعد أي عملية (زي connect/disconnect)
+refreshMe() {
+  this.getCurrentUser().subscribe();
+}
 }

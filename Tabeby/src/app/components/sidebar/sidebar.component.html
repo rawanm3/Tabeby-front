@@ -3,43 +3,50 @@
     <mat-icon class="sidebar-header-icon">filter_list</mat-icon>
     <span class="sidebar-header-title">Filters</span>
   </div>
+
   <mat-accordion multi>
-    <mat-expansion-panel expanded>
+    <!-- Specialty -->
+    <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon class="sidebar-section-icon">school</mat-icon>
-          Title
+          Specialty
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.titleProfessor" (change)="onFilterChange()">Professor</mat-checkbox>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.titleLecturer" (change)="onFilterChange()">Lecturer</mat-checkbox>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.titleConsultant" (change)="onFilterChange()">Consultant</mat-checkbox>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.titleSpecialist" (change)="onFilterChange()">Specialist</mat-checkbox>
+      <input matInput placeholder="Enter specialty"
+             [(ngModel)]="filters.specialty"
+             (ngModelChange)="applyFilter()" />
     </mat-expansion-panel>
-    <mat-expansion-panel expanded>
+
+    <!-- Location -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="sidebar-section-icon">location_on</mat-icon>
+          Location
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <input matInput placeholder="Enter location"
+             [(ngModel)]="filters.location"
+             (ngModelChange)="applyFilter()" />
+    </mat-expansion-panel>
+
+    <!-- Gender -->
+    <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon class="sidebar-section-icon">transgender</mat-icon>
           Gender
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.genderFemale" (change)="onFilterChange()">Female</mat-checkbox>
-      <mat-checkbox class="sidebar-checkbox" [(ngModel)]="filter.genderMale" (change)="onFilterChange()">Male</mat-checkbox>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon class="sidebar-section-icon">event_note</mat-icon>
-          Availability
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-radio-group [(ngModel)]="filter.availability" (change)="onFilterChange()">
-        <mat-radio-button value="any">Any</mat-radio-button><br>
-        <mat-radio-button value="today">Today</mat-radio-button><br>
-        <mat-radio-button value="tomorrow">Tomorrow</mat-radio-button><br>
-        <mat-radio-button value="wed">Wed 08/20</mat-radio-button>
+      <mat-radio-group [(ngModel)]="filters.gender" (change)="applyFilter()">
+        <mat-radio-button value="">All</mat-radio-button><br>
+        <mat-radio-button value="male">Male</mat-radio-button><br>
+        <mat-radio-button value="female">Female</mat-radio-button>
       </mat-radio-group>
     </mat-expansion-panel>
+
+    <!-- Fee -->
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -47,24 +54,14 @@
           Examination Fee
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <mat-radio-group class="sidebar-radio-group" [(ngModel)]="filter.fee" (change)="onFilterChange()">
-        <mat-radio-button class="sidebar-radio" value="any">Any</mat-radio-button><br>
-        <mat-radio-button class="sidebar-radio" value="lt50">Less than 50</mat-radio-button><br>
-        <mat-radio-button class="sidebar-radio" value="50-100">From 50 to 100</mat-radio-button><br>
-        <mat-radio-button class="sidebar-radio" value="100-200">From 100 to 200</mat-radio-button><br>
-        <mat-radio-button class="sidebar-radio" value="200-300">From 200 to 300</mat-radio-button><br>
-        <mat-radio-button class="sidebar-radio" value="gt300">Greater than 300</mat-radio-button>
+      <mat-radio-group [(ngModel)]="filters.fee" (change)="applyFilter()">
+        <mat-radio-button value="">Any</mat-radio-button><br>
+        <mat-radio-button value="lt50">Less than 50</mat-radio-button><br>
+        <mat-radio-button value="50-100">From 50 to 100</mat-radio-button><br>
+        <mat-radio-button value="100-200">From 100 to 200</mat-radio-button><br>
+        <mat-radio-button value="200-300">From 200 to 300</mat-radio-button><br>
+        <mat-radio-button value="gt300">Greater than 300</mat-radio-button>
       </mat-radio-group>
     </mat-expansion-panel>
   </mat-accordion>
-</div>
-<div class="dropdown">
-  <!-- عرض التسمية المختارة -->
-  <!-- {{ selectedLabel }} -->
-
-  <!-- <select [(ngModel)]="selected">
-    <option *ngFor="let opt of options" [value]="opt.value">
-      {{ opt.label }}
-    </option>
-  </select> -->
 </div>
