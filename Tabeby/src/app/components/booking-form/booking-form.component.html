@@ -1,0 +1,43 @@
+<div class="container mt-4">
+  <h2>حجز موعد</h2>
+
+  <form [formGroup]="bookingForm" (ngSubmit)="submit()">
+    <!-- Doctor -->
+    <div class="mb-3">
+      <label class="form-label">اختر الدكتور</label>
+      <select class="form-control" formControlName="doctorId" (change)="loadFreeSlots()">
+        <option value="">-- اختر --</option>
+        <option *ngFor="let doc of doctors" [value]="doc.id">{{ doc.name }}</option>
+      </select>
+    </div>
+
+    <!-- Patient -->
+    <div class="mb-3">
+      <label class="form-label">اختر المريض</label>
+      <select class="form-control" formControlName="patientId">
+        <option value="">-- اختر --</option>
+        <option *ngFor="let pat of patients" [value]="pat.id">{{ pat.name }}</option>
+      </select>
+    </div>
+
+    <!-- Date -->
+    <div class="mb-3">
+      <label class="form-label">اختر التاريخ</label>
+      <input type="date" class="form-control" formControlName="date" (change)="loadFreeSlots()">
+    </div>
+
+    <!-- Available Slots -->
+    <div class="mb-3" *ngIf="freeSlots.length > 0">
+      <label class="form-label">الأوقات المتاحة</label>
+      <select class="form-control" formControlName="slot">
+        <option *ngFor="let slot of freeSlots" [value]="slot.start">
+          {{ slot.start | date:'shortTime' }} - {{ slot.end | date:'shortTime' }}
+        </option>
+      </select>
+    </div>
+
+    <button class="btn btn-primary" type="submit" >
+      تأكيد الحجز
+    </button>
+  </form>
+</div>

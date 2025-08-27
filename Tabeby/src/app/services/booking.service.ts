@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class BookingService {
   private apiUrl = 'http://localhost:3000';
+    private baseUrl = 'http://localhost:3000/doctors';
+
 
   constructor(private http: HttpClient) {}
 
@@ -31,9 +33,12 @@ private getAuthHeaders() {
   }
 
   /** جلب بيانات دكتور محدد */
-  getDoctorById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/doctors/${id}`);
-  }
+  // getDoctorById(id: string): Observable<any> {
+  //   return this.http.get(`${this.apiUrl}/doctors/${id}`);
+  // }
+getDoctorById(id: string): Observable<any> {
+  return this.http.get(`${this.baseUrl}/${id}`);
+}
 
   /** جلب الأيام المتاحة */
   getAvailableDays(doctorId: string): Observable<any> {

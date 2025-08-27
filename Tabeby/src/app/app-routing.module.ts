@@ -18,12 +18,16 @@ import { authGuard } from './guards/auth.guard';
 import { VerifyOtpResetComponent } from './components/verify-otp-reset/verify-otp-reset.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { DoctorBookingComponent } from './components/doctor-booking/doctor-booking.component';
+import { MainComponent } from './components/main/main.component';
+import { HomeComponent } from './components/home/home.component';
+import { BookingFormComponent } from './components/booking-form/booking-form.component';
+import { PaymentComponent } from './components/payment/payment.component';
 
 const routes: Routes = [
   // الصفحة الافتراضية
-  { path: '', redirectTo: '/contact-us', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   // الصفحات العامة
-  { path: 'contact-us', component: ContactUsComponent },
+  { path: 'home', component: ContactUsComponent },
   // صفحات الدخول والتسجيل
   { path: 'login', component: LoginComponent, canActivate: [authGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [authGuard] },
@@ -37,8 +41,12 @@ const routes: Routes = [
   {path : 'patient', component:PatientComponent  },
   {path : 'admin', component:AdminComponent  },
   {path:'booking',component:DoctorBookingComponent},
-  { path: '**', redirectTo: '/contact-us' },
+  {path:'contact-us',component:MainComponent},
+  {path:'header',component:HomeComponent},
+  { path: 'payment/:id', component: PaymentComponent },
+  {path:'booking-form',component:BookingFormComponent},
   { path: 'booking/:id', component: DoctorBookingComponent },
+  { path: '**', redirectTo: '/home' },
 
 ];
 

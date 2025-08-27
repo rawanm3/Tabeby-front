@@ -1,0 +1,30 @@
+.payment-container {
+  text-align: center;
+  margin-top: 20px;
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+
+    &:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+  }
+
+  .iframe-wrapper {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  p {
+    margin-top: 15px;
+    font-size: 18px;
+  }
+}

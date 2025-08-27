@@ -147,6 +147,19 @@
           </div>
         </div>
       </div>
+      <div class="form-row">
+  <div class="form-group">
+    <label>Profile Image *</label>
+    <input type="file" (change)="onProfileSelected($event)" accept="image/*" />
+
+    <!-- Preview -->
+    <div class="profile-preview" *ngIf="profilePreviewUrl">
+      <img [src]="profilePreviewUrl" alt="Profile Preview" />
+      <button type="button" class="remove-btn" (click)="removeProfileImage()">×</button>
+    </div>
+  </div>
+</div>
+
     </div>
 
     <!-- Step 2: Role Selection -->
@@ -192,22 +205,6 @@
           </ul>
         </div>
       
-
-        <div class="role-card" [class.selected]="roleForm.get('role')?.value === 'nurse'">
-          <input type="radio" id="nurse" formControlName="role" value="nurse">
-          <div class="nurse-icon"><i class="fa-regular fa-user"></i></div>
-          <label for="nurse">
-            <h4>Nurse</h4>
-          </label>
-          <p>Healthcare professionals providing patient care</p>
-          <ul>
-            <dt>Features include:</dt>
-            <li>Patient Care</li>
-            <li>Medical Records</li>
-            <li>Treatment Plans</li>
-            <li>Care Coordination</li>
-          </ul>
-        </div>
       </div>
       <div class="error" *ngIf="roleForm.get('role')?.invalid && roleForm.get('role')?.touched">
         Please select your role

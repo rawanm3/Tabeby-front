@@ -25,6 +25,10 @@ export class ContactUsComponent implements OnInit {
 goToDoctors(specialty: string) {
   this.router.navigate(['/doctor-appointments'], { queryParams: { specialty } });
 }
+goToBooking(doctorId: string) {
+  this.router.navigate(['/booking', doctorId]); 
+}
+
 
   loadSpecialties(type: 'doctors' | 'nurses') {
   this.activeTab = type;
@@ -111,4 +115,11 @@ showAll: boolean = false;
       queryParamsHandling: 'merge'
     });
   }
+  scrollToDoctors() {
+  const element = document.getElementById('doctors-section');
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
 }

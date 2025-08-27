@@ -30,7 +30,7 @@
 
       <!-- Description -->
       <p class="doctor-description">
-        {{ showFullDescription ? doctor.description : (doctor.description | slice:0:150) + '...' }}
+        {{ showFullDescription ? doctor?.description : (doctor?.description | slice:0:150) + '...' }}
       </p>
       <button class="read-more-btn" (click)="toggleDescription()">
         {{ showFullDescription ? 'Read Less' : 'Read More' }}
@@ -40,19 +40,19 @@
       <div class="doctor-info">
         <div class="info-item">
           <span class="info-label">Consultation Fee:</span>
-          <span class="info-value">{{ doctor.price }} EGP</span>
+          <span class="info-value">{{ doctor?.price }} EGP</span>
         </div>
         <div class="info-item">
           <span class="info-label">Clinic Address:</span>
-          <span class="info-value">{{ doctor.location }}</span>
+          <span class="info-value">{{ doctor?.location }}</span>
         </div>
         <div class="info-item">
           <span class="info-label">Years of Experience:</span>
-          <span class="info-value">{{ doctor.experience }} years</span>
+          <span class="info-value">{{ doctor?.experience }} years</span>
         </div>
         <div class="info-item">
           <span class="info-label">Patients Treated:</span>
-          <span class="info-value">+{{ doctor.patients }}</span>
+          <span class="info-value">+{{ doctor?.patients }}</span>
         </div>
       </div>
 
@@ -202,12 +202,12 @@
             <h3 class="section-title">Booking Summary</h3>
             <div class="summary-item">
               <span class="summary-label">Doctor:</span>
-              <span class="summary-value">{{ doctor.fullName }}</span>
+              <span class="summary-value">{{ doctor?.fullName }}</span>
 
             </div>
             <div class="summary-item">
               <span class="summary-label">Specialty:</span>
-              <span class="summary-value">{{ doctor.specialty }}</span>
+              <span class="summary-value">{{ doctor?.specialty }}</span>
             </div>
             <div class="summary-item">
               <span class="summary-label">Date:</span>
@@ -219,15 +219,15 @@
             </div>
             <div class="summary-item">
               <span class="summary-label">Consultation Fee:</span>
-              <span class="summary-value">{{ doctor.price }} EGP</span>
+              <span class="summary-value">{{ doctor?.price }} EGP</span>
             </div>
             <div class="summary-item">
               <span class="summary-label">Tax:</span>
-              <span class="summary-value">{{ (doctor.price * 0.1).toFixed(2) }} EGP</span>
+              <span class="summary-value">{{ (doctor?.price * 0.1).toFixed(2) }} EGP</span>
             </div>
             <div class="summary-item">
               <span class="summary-label total-price">Total Amount:</span>
-              <span class="summary-value total-price">{{ (doctor.price * 1.1).toFixed(2) }} EGP</span>
+              <span class="summary-value total-price">{{ (doctor?.price * 1.1).toFixed(2) }} EGP</span>
             </div>
           </div>
           <button class="btn btn-block" (click)="confirmBooking()" [disabled]="

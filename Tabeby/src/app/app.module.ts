@@ -36,6 +36,9 @@ import { ChooseSlotComponent } from './components/choose-slot/choose-slot.compon
 import { AdminComponent } from './components/admin/admin.component';
 import { NurseBookingComponent } from './components/nurse-booking/nurse-booking.component';
 import { VerifyOtpResetComponent } from './components/verify-otp-reset/verify-otp-reset.component';
+import { MainComponent } from './components/main/main.component';
+import { HomeComponent } from './components/home/home.component';
+import { BookingFormComponent } from './components/booking-form/booking-form.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +51,7 @@ import { VerifyOtpResetComponent } from './components/verify-otp-reset/verify-ot
     NurseComponent,
     DoctorComponent,
     RegisterComponent,
+    HomeComponent,
     FooterComponent,
     AboutUsComponent,
     ContactUsComponent,
@@ -62,6 +66,8 @@ import { VerifyOtpResetComponent } from './components/verify-otp-reset/verify-ot
     LoginComponent,
     NurseBookingComponent,
     VerifyOtpResetComponent,
+    MainComponent,
+    BookingFormComponent,
   ],
   imports: [
     BrowserModule,

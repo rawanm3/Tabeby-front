@@ -49,44 +49,45 @@ export class DoctorBookingComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
-    this.bookingForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      phone: ['', [Validators.required, Validators.pattern('^\\+?[0-9]{8,15}$')]],
-      email: ['', [Validators.email]],
-      notes: [''],
-      age: ['', [Validators.required, Validators.min(1), Validators.max(120)]],
-      residence: ['', Validators.required],
-    });
+ ngOnInit(): void {
+  this.bookingForm = this.fb.group({
+    name: ['', [Validators.required, Validators.minLength(3)]],
+    phone: ['', [Validators.required, Validators.pattern('^\\+?[0-9]{8,15}$')]],
+    email: ['', [Validators.email]],
+    notes: [''],
+    age: ['', [Validators.required, Validators.min(1), Validators.max(120)]],
+    residence: ['', Validators.required],
+  });
 
-    this.reviewForm = this.fb.group({
-      rating: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
-      comment: ['', [Validators.required, Validators.minLength(5)]],
-    });
+  this.reviewForm = this.fb.group({
+    rating: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
+    comment: ['', [Validators.required, Validators.minLength(5)]],
+  });
 
-    // ✅ فك التوكن للحصول على userId
-const token = localStorage.getItem('token');
-    if (token) {
-      const decoded: any = jwtDecode(token);
-      this.userId = decoded.id; 
-    }
-
-    const doctorId = this.route.snapshot.paramMap.get('id');
-    if (doctorId) {
-      this.fetchDoctorData(doctorId);
-      this.loadReviews(doctorId);
-
-      // 🔹 إنشاء الأيام من اليوم لحد 21 يوم قدام
-      const today = new Date();
-      for (let i = 0; i < 21; i++) {
-        const d = new Date(today);
-        d.setDate(today.getDate() + i);
-        this.availableDays.push(this.formatDay(d));
-      }
-      this.firstDays = this.availableDays.slice(0, 7);
-      this.remainingDays = this.availableDays.slice(7);
-    }
+  // ✅ فك التوكن للحصول على userId
+  const token = localStorage.getItem('token');
+  if (token) {
+    const decoded: any = jwtDecode(token);
+    this.userId = decoded.id; 
   }
+
+  const doctorId = this.route.snapshot.paramMap.get('id');
+  if (doctorId) {
+    this.fetchDoctorData(doctorId);
+    this.loadReviews(doctorId);
+
+    // 🔹 إنشاء الأيام من اليوم لحد 21 يوم قدام
+    const today = new Date();
+    for (let i = 0; i < 21; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      this.availableDays.push(this.formatDay(d));
+    }
+    this.firstDays = this.availableDays.slice(0, 7);
+    this.remainingDays = this.availableDays.slice(7);
+  }
+}
+
 
   formatDay(date: Date): string {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -111,28 +112,41 @@ const token = localStorage.getItem('token');
     this.remainingTimes = times.slice(5);
   }
 
-  fetchDoctorData(doctorId: string) {
+  // fetchDoctorData(doctorId: string) {
+  //   this.bookingService.getDoctorById(doctorId).subscribe({
+  //     next: (res) => {
+  //       this.doctor = res;
+  //       if (!this.doctor) {
+  //         Swal.fire({
+  //           icon: 'error',
+  //           title: 'Doctor Not Found',
+  //           text: 'الدكتور غير موجود',
+  //         });
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error(err);
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: 'Error',
+  //         text: 'فشل في جلب بيانات الدكتور',
+  //       });
+  //     },
+  //   });
+  // }
+fetchDoctorData(doctorId: string) {
+this.route.paramMap.subscribe(params => {
+  const doctorId = params.get('id');
+  if (doctorId) {
     this.bookingService.getDoctorById(doctorId).subscribe({
-      next: (res) => {
-        this.doctor = res;
-        if (!this.doctor) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Doctor Not Found',
-            text: 'الدكتور غير موجود',
-          });
-        }
-      },
-      error: (err) => {
-        console.error(err);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'فشل في جلب بيانات الدكتور',
-        });
-      },
+      next: (doc) => this.doctor = doc,
+      error: (err) => console.error('❌ API Error:', err)
     });
   }
+});
+
+}
+
 
   loadReviews(doctorId: string) {
     this.bookingService.getDoctorReviews(doctorId).subscribe({

@@ -1,0 +1,76 @@
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <div class="top-bar text-white py-2 px-2">
+    <div class= "mx-3 d-flex justify-content-between small">
+      <div class="d-flex align-items-center my-2">
+        <h3 class="box"><i class="fa-regular fa-clock"></i> Working Hour: <p>  08:00am to 09:00pm </p> </h3>
+        <span class="ms-3 box2"><i class="fa-solid fa-envelope"></i> tabeby.notification@gmail.com</span>
+      </div>
+      <div class="d-flex align-items-center my-2">
+        
+        <div class="d-flex align-items-center " >
+            <h3 class="box">
+                Contact: <p> +123 (456) 789</p>
+            </h3>
+         </div>
+      </div>
+    </div>
+  </div>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-3 ">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand fw-bold" href="#">Dispensary</a>
+
+    <!-- Toggle button for mobile -->
+    <a class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </a>
+
+    <!-- Menu -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center ">
+<!-- الحالة لو مفيش user -->
+<ng-template #guest>
+  <li class="nav-item">
+    <a routerLink="/register" class="btn-outline-primary btn">Sign Up</a>
+  </li>
+  <li class="nav-item">
+    <a routerLink="/login">Login</a>
+  </li>
+</ng-template>
+
+<!-- الحالة لو فيه user -->
+<ng-container *ngIf="user; else guest">
+  <li class="nav-item">
+    <span class="me-3" >👋 Hello{{ user.name }}</span>
+  </li>
+  <li class="nav-item">
+    <button class="btn btn-danger" (click)="logout()">Logout</button>
+  </li>
+</ng-container>
+
+
+
+        <!-- Contact Us -->
+        <li class="nav-item">
+          <a href="#" class="">Contact Us</a>
+        </li>
+
+      
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+  
+
+

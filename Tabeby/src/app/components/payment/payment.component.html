@@ -1,0 +1,19 @@
+<div class="payment-container">
+  <h2>الدفع</h2>
+
+  <button (click)="startPayment()" [disabled]="loading || iframeUrl">
+    {{ loading ? 'جاري إنشاء الدفع...' : 'ادفع الآن' }}
+  </button>
+
+  <div *ngIf="iframeUrl" class="iframe-wrapper">
+    <iframe
+      [src]="iframeUrl"
+      width="600"
+      height="400"
+      frameborder="0"
+      allow="payment"
+    ></iframe>
+  </div>
+
+  <p *ngIf="status">حالة الحجز: <strong>{{ status }}</strong></p>
+</div>
